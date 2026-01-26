@@ -1,0 +1,7 @@
+/* resources/css/app.css */
+
+@import "./main.css"; /* WAJIB DI ATAS */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

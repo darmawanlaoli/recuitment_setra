@@ -8,6 +8,8 @@
         content="PT. Setra Praba Perkasa - Portal Rekrutmen Resmi. Temukan peluang karir terbaik dan bergabunglah dengan tim profesional kami.">
     <title>Beranda - PT. Setra Praba Perkasa Recruitment Portal</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script type="module" async
@@ -39,7 +41,7 @@
                             </defs>
                         </svg>
                     </div>
-                    <div class="hidden sm:block">
+                    <div>
                         <div
                             class="font-heading font-bold text-lg text-text-primary group-hover:text-primary transition-colors">
                             PT. Setra Praba Perkasa</div>

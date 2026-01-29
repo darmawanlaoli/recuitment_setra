@@ -27,10 +27,10 @@
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                         <div>
                             <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-3 font-heading">
-                                Formulir Lamaran
+                                Manajemen Profil
                             </h1>
                             <p class="text-lg text-text-secondary">
-                                Formulir Lamaran Kerja PT. Setra Praba Perkasa
+                                Kelola informasi pribadi dan lacak riwayat lamaran Anda
                             </p>
                         </div>
                         <!-- Profile Completion Indicator -->
@@ -51,6 +51,56 @@
                     </div>
                 </div>
 
+                <!-- Tabs Navigation -->
+                <div class="mb-8 border-b border-border">
+                    <div class="flex gap-2 overflow-x-auto">
+                        <button id="tab-profile"
+                            class="tab-button active px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Informasi Profil</span>
+                            </div>
+                        </button>
+                        <button id="tab-history"
+                            class="tab-button px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                    <path fill-rule="evenodd"
+                                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Riwayat Lamaran</span>
+                            </div>
+                        </button>
+                        <button id="tab-documents"
+                            class="tab-button px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Dokumen</span>
+                            </div>
+                        </button>
+                        <button id="tab-settings"
+                            class="tab-button px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Pengaturan</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Tab Content: Profile Information -->
                 <div id="content-profile" class="tab-content">
                     <div class="grid lg:grid-cols-3 gap-8">
@@ -59,9 +109,10 @@
                             <div class="card sticky top-24">
                                 <div class="text-center">
                                     <div class="relative inline-block mb-6">
-                                        <img src="{{ Auth::user()->avatar }}" alt="Foto profil"
+                                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_160641e89-1763295152619.png"
+                                            alt="Foto profil Ahmad Rizki, pencari kerja di PT. Setra Praba Perkasa"
                                             class="w-32 h-32 rounded-full object-cover border-4 border-primary-100 shadow-lg"
-                                            onerror="this.src='https://cdn.vectorstock.com/i/500p/29/52/faceless-male-avatar-in-hoodie-vector-56412952.jpg'; this.onerror=null;">
+                                            onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop'; this.onerror=null;">
                                         <button
                                             class="absolute bottom-0 right-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-primary-700 transition-colors">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -86,29 +137,18 @@
                                     <div class="space-y-3">
                                         <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
                                             <span class="text-sm text-text-secondary">Total Lamaran</span>
-                                            <span class="text-lg font-bold text-primary font-heading">0</span>
+                                            <span class="text-lg font-bold text-primary font-heading">8</span>
                                         </div>
                                         <div class="flex items-center justify-between p-3 bg-success-50 rounded-lg">
                                             <span class="text-sm text-text-secondary">Sedang Diproses</span>
-                                            <span class="text-lg font-bold text-success-600 font-heading">0</span>
+                                            <span class="text-lg font-bold text-success-600 font-heading">3</span>
                                         </div>
                                         <div class="flex items-center justify-between p-3 bg-warning-50 rounded-lg">
                                             <span class="text-sm text-text-secondary">Ditinjau</span>
-                                            <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+                                            <span class="text-lg font-bold text-warning-600 font-heading">2</span>
                                         </div>
-
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-
-                                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                                {{ __('Log Out') }}
-                                            </x-dropdown-link>
-                                        </form>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
 
@@ -450,13 +490,192 @@
                                     <button type="button" class="btn-ghost h-12 px-8">
                                         Batal
                                     </button>
-                                    <button
-                                        onclick="alert('Fitur ini masih dalam pengembangan, silahkan cek beberapa saat lagi')"
-                                        type="submit" class="btn-primary h-12 px-8 group">
+                                    <button type="submit" class="btn-primary h-12 px-8 group">
                                         <span>Simpan</span>
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Documents -->
+                <div id="content-documents" class="tab-content hidden">
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <!-- CV Upload Section -->
+                        <div class="card">
+                            <div class="flex items-center gap-3 mb-6 pb-6 border-b border-border">
+                                <div class="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-text-primary font-heading">Curriculum Vitae (CV)
+                                    </h3>
+                                    <p class="text-sm text-text-secondary font-caption">Upload CV terbaru Anda</p>
+                                </div>
+                            </div>
+
+                            <!-- Current CV -->
+                            <div class="mb-6 p-4 bg-neutral-50 rounded-xl border border-border">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-lg bg-error-100 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-error-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="font-semibold text-text-primary truncate">CV_Ahmad_Rizki_2026.pdf
+                                        </h4>
+                                        <p class="text-sm text-text-secondary">2.4 MB • Diupload 15 Jan 2026</p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button
+                                            class="w-10 h-10 rounded-lg bg-primary-100 text-primary hover:bg-primary-200 transition-colors flex items-center justify-center">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            class="w-10 h-10 rounded-lg bg-error-100 text-error-600 hover:bg-error-200 transition-colors flex items-center justify-center">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upload New CV -->
+                            <div
+                                class="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
+                                <input type="file" id="cv-upload" class="hidden" accept=".pdf,.doc,.docx">
+                                <label for="cv-upload" class="cursor-pointer">
+                                    <div
+                                        class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-text-primary mb-2">Upload CV Baru</h4>
+                                    <p class="text-sm text-text-secondary mb-4">
+                                        Klik untuk memilih file atau drag & drop
+                                    </p>
+                                    <p class="text-xs text-text-tertiary">
+                                        Format: PDF, DOC, DOCX (Max. 5MB)
+                                    </p>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio Upload Section -->
+                        <div class="card">
+                            <div class="flex items-center gap-3 mb-6 pb-6 border-b border-border">
+                                <div class="w-12 h-12 rounded-xl bg-secondary-100 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z"
+                                            clip-rule="evenodd" />
+                                        <path d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-text-primary font-heading">Portfolio</h3>
+                                    <p class="text-sm text-text-secondary font-caption">Upload dokumen portfolio Anda
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Portfolio Files -->
+                            <div class="space-y-3 mb-6">
+                                <div class="p-4 bg-neutral-50 rounded-xl border border-border">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="font-semibold text-text-primary truncate">Project_Screenshots.pdf
+                                            </h4>
+                                            <p class="text-sm text-text-secondary">3.8 MB • Diupload 15 Jan 2026</p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button
+                                                class="w-10 h-10 rounded-lg bg-primary-100 text-primary hover:bg-primary-200 transition-colors flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                class="w-10 h-10 rounded-lg bg-error-100 text-error-600 hover:bg-error-200 transition-colors flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-neutral-50 rounded-xl border border-border">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-lg bg-secondary-100 flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="font-semibold text-text-primary truncate">Certificates.pdf</h4>
+                                            <p class="text-sm text-text-secondary">1.2 MB • Diupload 10 Jan 2026</p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button
+                                                class="w-10 h-10 rounded-lg bg-primary-100 text-primary hover:bg-primary-200 transition-colors flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                class="w-10 h-10 rounded-lg bg-error-100 text-error-600 hover:bg-error-200 transition-colors flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>

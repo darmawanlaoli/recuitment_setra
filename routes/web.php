@@ -1,22 +1,23 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\SocialiteController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api/kabupaten/{provinsi}', [DashboardController::class, 'kabupaten']);
+    Route::get('/api/kecamatan/{kabupaten}', [DashboardController::class, 'kecamatan']);
+    Route::get('/api/desa/{kecamatan}', [DashboardController::class, 'desa']);
 });
 
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect'])->name('google.redirect');

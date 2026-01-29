@@ -8,15 +8,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Http;
 
-class ProfileController extends Controller
+class DashboardController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+
+    public function index()
+    {
+        // Ambil provinsi
+        $response = Http::get('https://api.datawilayah.com/api/provinsi.json');
+        $provinsi = $response->json()['data'] ?? [];
+        return view('dashboard', compact('provinsi'));
+    }
+
+    public function kabupaten($provinsi)
+    {
+        $response = Http::get("https://api.datawilayah.com/api/kabupaten_kota/{$provinsi}.json");
+        return response()->json($response->json());
+    }
+
+    public function kecamatan($kabupaten)
+    {
+        $response = Http::get("https://api.datawilayah.com/api/kecamatan/{$kabupaten}.json");
+        return response()->json($response->json());
+    }
+
+    public function desa($kecamatan)
+    {
+        $response = Http::get("https://api.datawilayah.com/api/desa_kelurahan/{$kecamatan}.json");
+        return response()->json($response->json());
+    }
+
+
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        return view('dashboard', [
             'user' => $request->user(),
         ]);
     }

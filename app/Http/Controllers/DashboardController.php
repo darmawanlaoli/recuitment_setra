@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Services\Hrms\AreaService;
+use App\Services\Hrms\JabatanService;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,15 +11,21 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
 
+
 class DashboardController extends Controller
 {
 
-    public function index()
+    public function index(
+        AreaService $areaService,
+        JabatanService $jabatanService
+    )
     {
+        $areas = $areaService->all();
+        $jabatans = $jabatanService->all();
         // Ambil provinsi
         $response = Http::get('https://api.datawilayah.com/api/provinsi.json');
         $provinsi = $response->json()['data'] ?? [];
-        return view('dashboard', compact('provinsi'));
+        return view('dashboard', compact('provinsi', 'areas', 'jabatans'));
     }
 
     public function kabupaten($provinsi)

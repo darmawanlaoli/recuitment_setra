@@ -80,20 +80,23 @@
                                                 d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
                                                 clip-rule="evenodd" />
                                         </svg>
-                                        <span>Bergabung sejak {{ date('d F Y', strtotime(Auth::user()->created_at))
-                                            }}</span>
+                                        <span>Tahap Melamar Kerja</span>
                                     </div>
                                     <div class="space-y-3">
                                         <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
-                                            <span class="text-sm text-text-secondary">Total Lamaran</span>
+                                            <span class="text-sm text-text-secondary">Ajukan Lamaran</span>
                                             <span class="text-lg font-bold text-primary font-heading">0</span>
                                         </div>
                                         <div class="flex items-center justify-between p-3 bg-success-50 rounded-lg">
-                                            <span class="text-sm text-text-secondary">Sedang Diproses</span>
+                                            <span class="text-sm text-text-secondary">Menunggu Approval</span>
                                             <span class="text-lg font-bold text-success-600 font-heading">0</span>
                                         </div>
                                         <div class="flex items-center justify-between p-3 bg-warning-50 rounded-lg">
-                                            <span class="text-sm text-text-secondary">Ditinjau</span>
+                                            <span class="text-sm text-text-secondary">Mengisi Data Diri</span>
+                                            <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+                                        </div>
+                                        <div class="flex items-center justify-between p-3 bg-warning-50 rounded-lg">
+                                            <span class="text-sm text-text-secondary">Mengisi Form Pertanyaan</span>
                                             <span class="text-lg font-bold text-warning-600 font-heading">0</span>
                                         </div>
 
@@ -115,50 +118,6 @@
                         <!-- Profile Form Section -->
                         <div class="lg:col-span-2">
                             <form class="space-y-8">
-                                <!-- Personal Information -->
-                                <div class="card">
-                                    <div class="flex items-center gap-3 mb-6 pb-6 border-b border-border">
-                                        <div
-                                            class="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
-                                            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-xl font-bold text-text-primary font-heading">Informasi
-                                                Pribadi
-                                            </h3>
-                                            <p class="text-sm text-text-secondary font-caption">Data diri dan kontak
-                                                Anda
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label for="fullname" class="label">Nama Lengkap *</label>
-                                            <input type="text" id="fullname" value="{{ Auth::user()->name }}"
-                                                class="input w-full" required>
-                                        </div>
-                                        <div>
-                                            <label for="email" class="label">Email *</label>
-                                            <input type="email" id="email" value="{{ Auth::user()->email }}"
-                                                class="input w-full" required>
-                                        </div>
-                                        <div>
-                                            <label for="phone" class="label">Nomor Telepon *</label>
-                                            <input type="tel" id="phone" value="" class="input w-full" required>
-                                        </div>
-                                        <div>
-                                            <label for="birthdate" class="label">Tanggal Lahir</label>
-                                            <input type="date" id="birthdate" class="input w-full">
-                                        </div>
-
-                                    </div>
-                                </div>
-
 
                                 <!-- address -->
                                 <div class="card">
@@ -172,10 +131,10 @@
                                             </svg>
                                         </div>
                                         <div>
-                                            <h3 class="text-xl font-bold text-text-primary font-heading">Alamat
+                                            <h3 class="text-xl font-bold text-text-primary font-heading">Ajukan Lamaran
                                             </h3>
-                                            <p class="text-sm text-text-secondary font-caption">Alamat dan lokasi
-                                                penempatan
+                                            <p class="text-sm text-text-secondary font-caption">Isi data di bawa ini
+                                                untuk mengajukan lamaran kerja Anda
                                             </p>
                                         </div>
                                     </div>
@@ -202,246 +161,30 @@
                                         </div>
 
                                         <div class="md:col-span-2">
-                                            <label>Kecamatan</label>
-                                            <select id="kecamatan" class="input w-full">
-                                                <option value="">-- Pilih Kecamatan --</option>
+                                            <label>Area</label>
+                                            <select id="area" class="input w-full">
+                                                <option value="">-- Pilih Area --</option>
+                                                @foreach($areas as $area)
+                                                <option value="{{ $area['id'] }}">
+                                                    {{ $area['nama_area'] }}
+                                                </option>
+                                                @endforeach
                                             </select>
                                         </div>
+
 
                                         <div class="md:col-span-2">
-                                            <label>Desa / Kelurahan</label>
-                                            <select id="desa" class="input w-full">
-                                                <option value="">-- Pilih Desa/Kelurahan --</option>
+                                            <label>Posisi yang dilamar</label>
+                                            <select id="posisi" class="input w-full">
+                                                <option value="">-- Pilih Posisi --</option>
+                                                @foreach($jabatans as $jabatan)
+                                                <option value="{{ $jabatan['id'] }}">
+                                                    {{ $jabatan['nama_jabatan'] }}
+                                                </option>
+                                                @endforeach
                                             </select>
                                         </div>
 
-                                        <div class="md:col-span-2">
-                                            <label for="alamat" class="label">Alamat Lengkap</label>
-                                            <input id="alamat" type="text" class="input w-full">
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <!-- Professional Summary -->
-                                <div class="card">
-                                    <div class="flex items-center gap-3 mb-6 pb-6 border-b border-border">
-                                        <div
-                                            class="w-12 h-12 rounded-xl bg-secondary-100 flex items-center justify-center">
-                                            <svg class="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-xl font-bold text-text-primary font-heading">Upload Berkas
-                                            </h3>
-                                            <p class="text-sm text-text-secondary font-caption">Upload berkas Anda</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-6">
-                                        <div class="grid md:grid-cols-2 gap-6">
-
-                                            <!-- Upload CV dan lamaran -->
-                                            <div
-                                                class="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-
-                                                <input type="file" id="cv-upload" class="hidden"
-                                                    accept=".pdf,.doc,.docx">
-
-                                                <label for="cv-upload" class="cursor-pointer">
-                                                    <div
-                                                        class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
-                                                        <svg class="w-8 h-8 text-primary" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                        </svg>
-                                                    </div>
-
-                                                    <h4 class="text-lg font-semibold text-text-primary mb-2">
-                                                        Upload CV & Surat Lamaran
-                                                    </h4>
-
-                                                    <p class="text-sm text-text-secondary mb-4">
-                                                        Klik untuk memilih file atau drag & drop
-                                                    </p>
-
-                                                    <p class="text-xs text-text-tertiary">
-                                                        Format: PDF, DOC, DOCX (Max. 5MB)
-                                                    </p>
-                                                </label>
-
-                                                <!-- Nama File -->
-                                                <p id="cv-file-name"
-                                                    class="mt-3 text-sm text-primary font-medium hidden"></p>
-                                            </div>
-
-                                            <!-- Upload KK -->
-                                            <div
-                                                class="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-
-                                                <input type="file" id="upload-kk" class="hidden"
-                                                    accept=".pdf,.doc,.docx">
-
-                                                <label for="upload-kk" class="cursor-pointer">
-                                                    <div
-                                                        class="w-16 h-16 rounded-full bg-secondary-50 flex items-center justify-center mx-auto mb-4">
-                                                        <svg class="w-8 h-8 text-secondary" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                        </svg>
-                                                    </div>
-
-                                                    <h4 class="text-lg font-semibold text-text-primary mb-2">
-                                                        Upload KK
-                                                    </h4>
-
-                                                    <p class="text-sm text-text-secondary mb-4">
-                                                        Klik untuk memilih file atau drag & drop
-                                                    </p>
-
-                                                    <p class="text-xs text-text-tertiary">
-                                                        Format: PDF, DOC, DOCX (Max. 5MB)
-                                                    </p>
-                                                </label>
-
-                                                <!-- Nama File -->
-                                                <p id="file-kk" class="mt-3 text-sm text-primary font-medium hidden">
-                                                </p>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="grid md:grid-cols-2 gap-6">
-
-                                            <!-- Upload KTP -->
-                                            <div
-                                                class="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-
-                                                <input type="file" id="file-ktp" class="hidden"
-                                                    accept=".pdf,.doc,.docx">
-
-                                                <label for="file-ktp" class="cursor-pointer">
-                                                    <div
-                                                        class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
-                                                        <svg class="w-8 h-8 text-primary" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                        </svg>
-                                                    </div>
-
-                                                    <h4 class="text-lg font-semibold text-text-primary mb-2">
-                                                        Upload KTP
-                                                    </h4>
-
-                                                    <p class="text-sm text-text-secondary mb-4">
-                                                        Klik untuk memilih file atau drag & drop
-                                                    </p>
-
-                                                    <p class="text-xs text-text-tertiary">
-                                                        Format: PDF, DOC, DOCX (Max. 5MB)
-                                                    </p>
-                                                </label>
-
-                                                <!-- Nama File -->
-                                                <p id="file-ktp" class="mt-3 text-sm text-primary font-medium hidden">
-                                                </p>
-                                            </div>
-
-                                            <!-- Upload SIM -->
-                                            <div
-                                                class="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-
-                                                <input type="file" id="upload-sim" class="hidden"
-                                                    accept=".pdf,.doc,.docx">
-
-                                                <label for="upload-sim" class="cursor-pointer">
-                                                    <div
-                                                        class="w-16 h-16 rounded-full bg-secondary-50 flex items-center justify-center mx-auto mb-4">
-                                                        <svg class="w-8 h-8 text-secondary" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                        </svg>
-                                                    </div>
-
-                                                    <h4 class="text-lg font-semibold text-text-primary mb-2">
-                                                        Upload SIM
-                                                    </h4>
-
-                                                    <p class="text-sm text-text-secondary mb-4">
-                                                        Klik untuk memilih file atau drag & drop
-                                                    </p>
-
-                                                    <p class="text-xs text-text-tertiary">
-                                                        Format: PDF, DOC, DOCX (Max. 5MB)
-                                                    </p>
-                                                </label>
-
-                                                <!-- Nama File -->
-                                                <p id="file-sim" class="mt-3 text-sm text-primary font-medium hidden">
-                                                </p>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-
-                                <!-- Social Links -->
-                                <div class="card">
-                                    <div class="flex items-center gap-3 mb-6 pb-6 border-b border-border">
-                                        <div
-                                            class="w-12 h-12 rounded-xl bg-accent-100 flex items-center justify-center">
-                                            <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                                                <path
-                                                    d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                                                <path
-                                                    d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-xl font-bold text-text-primary font-heading">Data Lainnya
-                                            </h3>
-                                            <p class="text-sm text-text-secondary font-caption">Tambahkan data lainnya
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-6">
-                                        <div>
-                                            <label for="linkedin" class="label">Posisi yang Anda Lamar</label>
-                                            <select name="posisi" class="input w-full">
-                                                <option value="DRIVER">DRIVER</option>
-                                                <option value="NON DRIVER">NON DRIVER</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label for="linkedin" class="label">Jenis SIM</label>
-                                            <select name="posisi" class="input w-full">
-                                                <option value="Pilih jenis SIM">Pilih jenis SIM</option>
-                                                <option value="C">C</option>
-                                                <option value="A">A</option>
-                                                <option value="B1">B1</option>
-                                                <option value="B2">B2</option>
-                                                <option value="D">D</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label for="portfolio" class="label">Area Penempatan</label>
-                                            <input type="text" class="input w-full">
-                                        </div>
                                     </div>
                                 </div>
 

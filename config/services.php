@@ -41,4 +41,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URL'),
     ],
 
+    'hrms' => [
+        'url' => env('HRMS_API_URL'),
+        'key' => env('HRMS_API_KEY'),
+    ],
+
+
 ];

@@ -18,6 +18,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/kabupaten/{provinsi}', [DashboardController::class, 'kabupaten']);
     Route::get('/api/kecamatan/{kabupaten}', [DashboardController::class, 'kecamatan']);
     Route::get('/api/desa/{kecamatan}', [DashboardController::class, 'desa']);
+
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+
+    Route::post('/lamaran/store', [DashboardController::class, 'storeLamaran'])->name('lamaran.store');
 });
 
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect'])->name('google.redirect');

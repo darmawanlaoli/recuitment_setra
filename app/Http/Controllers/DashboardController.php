@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Application;
 use App\Services\Hrms\AreaService;
 use App\Services\Hrms\JabatanService;
 use App\Http\Requests\ProfileUpdateRequest;
@@ -22,11 +23,21 @@ class DashboardController extends Controller
     {
         $areas = $areaService->all();
         $jabatans = $jabatanService->all();
+
         // Ambil provinsi
         $response = Http::get('https://api.datawilayah.com/api/provinsi.json');
         $provinsi = $response->json()['data'] ?? [];
-        return view('dashboard', compact('provinsi', 'areas', 'jabatans'));
+        $applications = Application::where('id_user', Auth::id())->get();
+        return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications'));
     }
+
+    public function profile()
+    {
+        $applicants = Application::with(['province', 'regency'])->get();
+
+        return view('profile', compact('applicants'));
+    }
+
 
     public function kabupaten($provinsi)
     {
@@ -89,5 +100,39 @@ class DashboardController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function storeLamaran(Request $request)
+    {
+
+        $request->validate([
+            'provinsi' => 'required',
+            'kabupaten' => 'required',
+            'area' => 'required',
+            'posisi' => 'required',
+        ]);
+
+        // Ambil kode wilayah dari request
+        $provinsiKode = $request->provinsi;
+        $kabupatenKode = $request->kabupaten;
+
+        // Ambil daftar provinsi dan kabupaten dari API atau service
+        $provinsiList = Http::get('https://wilayah.id/api/provinces.json')->json()['data'] ?? [];
+        $kabupatenList = Http::get("https://wilayah.id/api/regencies/{$provinsiKode}.json")->json()['data'] ?? [];
+
+        // Cari nama berdasarkan kode
+        $provinsiNama = collect($provinsiList)->firstWhere('code', $provinsiKode)['name'] ?? null;
+        $kabupatenNama = collect($kabupatenList)->firstWhere('code', $kabupatenKode)['name'] ?? null;
+
+        Application::create([
+            'id_user' => Auth::id(),
+            'provinsi' => $provinsiNama,
+            'kabupaten' => $kabupatenNama,
+            'area' => $request->area,
+            'posisi' => $request->posisi,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
     }
 }

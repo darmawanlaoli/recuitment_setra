@@ -46,5 +46,10 @@ return [
         'key' => env('HRMS_API_KEY'),
     ],
 
+    'wilayah' => [
+        'provinces_url' => env('WILAYAH_PROVINCES_URL'),
+        'regencies_base_url' => env('WILAYAH_REGENCIES_BASE_URL'),
+    ],
+
 
 ];

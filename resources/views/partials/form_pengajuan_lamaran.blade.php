@@ -22,6 +22,12 @@
 
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
+                    <label for="address" class="label">Nama Lengkap *</label>
+                    <input type="text" class="input w-full" name="nama_lengkap" id="nama_lengkap"
+                        placeholder="Masukkan nama lengkap Anda" value="{{ Auth::user()->name }}">
+                </div>
+
+                <div class="md:col-span-2">
                     <label for="address" class="label">Provinsi *</label>
 
                     <select id="provinsi" name="provinsi" class="input w-full">
@@ -46,7 +52,7 @@
                     <select id="area" class="input w-full" name="area">
                         <option value="">-- Pilih Area --</option>
                         @foreach($areas as $area)
-                        <option value="{{ $area['id'] }}">
+                        <option value="{{ $area['nama_area'] }}">
                             {{ $area['nama_area'] }}
                         </option>
                         @endforeach

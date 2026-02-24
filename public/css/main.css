@@ -1596,6 +1596,10 @@ html {
   margin-top: 0.5rem;
 }
 
+.mt-5{
+  margin-top: 2rem;
+}
+
 .mt-20{
   margin-top: 5rem;
 }
@@ -2508,6 +2512,11 @@ html {
 
 .text-right{
   text-align: right;
+}
+
+.text-danger {
+    --tw-text-opacity: 1;
+    color: rgb(220 38 38 / var(--tw-text-opacity, 1));
 }
 
 .font-caption{

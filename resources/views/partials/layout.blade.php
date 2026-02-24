@@ -9,7 +9,7 @@
         <meta name="description"
             content="Kelola profil dan lacak riwayat lamaran Anda di PT. Setra Praba Perkasa Recruitment Portal">
         <title>Manajemen Profil</title>
-        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="{{ asset('../css/main.css') }}">
 
         <script type="module" async
             src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsetrarecr6900back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.15">

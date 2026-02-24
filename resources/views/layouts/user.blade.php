@@ -26,7 +26,7 @@
     <script src="//unpkg.com/alpinejs" defer></script>
 
     {{-- TOAST --}}
-    <div x-data="{
+    {{-- <div x-data="{
                 show: {{ session('toast') || $errors->any() ? 'true' : 'false' }},
                 message: '{{ session('toast.message') ?? ($errors->first() ?? '') }}',
                 type: '{{ session('toast.type') ?? 'error' }}'
@@ -64,7 +64,7 @@
                 ✕
             </button>
         </div>
-    </div>
+    </div> --}}
 </body>
 
 </html>

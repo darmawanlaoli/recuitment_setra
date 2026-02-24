@@ -20,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/desa/{kecamatan}', [DashboardController::class, 'desa']);
 
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit/{id}', [DashboardController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update/{id}', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
     Route::post('/lamaran/store', [DashboardController::class, 'storeLamaran'])->name('lamaran.store');
 });

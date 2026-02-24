@@ -21,8 +21,9 @@ class CandidateController extends Controller
 
     public function update(Request $request, $id)
     {
-        $candidate = Candidate::findOrFail($id);
-        $candidate->update($request->only(['status', 'approved_by']));
+        $candidate = Application::findOrFail($id);
+
+        $candidate->update($request->only(['status']));
         return response()->json([
             'message' => 'Candidate updated successfully',
             'data' => $candidate

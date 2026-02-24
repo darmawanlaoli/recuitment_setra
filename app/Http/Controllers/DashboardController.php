@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use App\Http\Requests\StoreApplicationRequest;
+use App\Services\ApplicationService;
 
 
 class DashboardController extends Controller
@@ -126,6 +128,7 @@ class DashboardController extends Controller
 
         Application::create([
             'id_user' => Auth::id(),
+            'name' => $request->nama_lengkap,
             'provinsi' => $provinsiNama,
             'kabupaten' => $kabupatenNama,
             'area' => $request->area,
@@ -135,4 +138,43 @@ class DashboardController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
     }
+
+    public function editProfile($id)
+    {
+        $applicant = Application::findOrFail($id);
+        return view('edit_profile', compact('applicant'));
+    }
+
+    // public function updateProfile(Request $request, $id)
+    // {
+    //     $applicant = Application::findOrFail($id);
+
+    //     $request->validate([
+    //         'nama_lengkap' => 'required|string|max:255',
+    //         'nama_panggilan' => 'required|string|max:255',
+    //         'jenis_kelamin' => 'required',
+    //     ]);
+
+    //     $applicant->name = $request->nama_lengkap;
+    //     $applicant->nama_panggilan = $request->nama_panggilan;
+    //     $applicant->jenis_kelamin = $request->jenis_kelamin;
+    //     $applicant->tempat_lahir = $request->tempat_lahir;
+    //     $applicant->tanggal_lahir = $request->tanggal_lahir;
+
+
+    //     $applicant->save();
+
+    //     return redirect()->route('dashboard')->with('success', 'Profil berhasil diperbarui!');
+    // }
+
+    public function updateProfile(
+        StoreApplicationRequest $request,
+        ApplicationService $service,
+        $id
+    ) {
+        $service->update($request, $id);
+
+        return redirect()->back()->with('success', 'Application updated successfully.');
+    }
+
 }

@@ -57,7 +57,7 @@ class StoreApplicationRequest extends FormRequest
             'jurusan' => 'nullable|string|max:100',
             'universitas' => 'nullable|string|max:150',
             'tahun_lulus' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
-            'ipk' => 'nullable|numeric|min:0|max:4',
+            'ipk' => 'nullable|numeric',
 
             'file_ijazah' => 'nullable|file|mimes:pdf|max:4096',
             'file_transkrip' => 'nullable|file|mimes:pdf|max:4096',
@@ -105,10 +105,10 @@ class StoreApplicationRequest extends FormRequest
             'file_kk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'file_sim' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'file_npwp' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'file_ijazah' => 'nullable|file|mimes:pdf|max:4096',
-            'file_transkrip' => 'nullable|file|mimes:pdf|max:4096',
-            'file_paklaring' => 'nullable|file|mimes:pdf|max:4096',
-            'file_skck' => 'nullable|file|mimes:pdf|max:4096',
+            'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'file_transkrip' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'file_paklaring' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'file_skck' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
         ];
     }
 }

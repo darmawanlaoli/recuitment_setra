@@ -65,7 +65,7 @@
                     <select id="posisi" class="input w-full" name="posisi">
                         <option value="">-- Pilih Posisi --</option>
                         @foreach($jabatans as $jabatan)
-                        <option value="{{ $jabatan['id'] }}">
+                        <option value="{{ $jabatan['nama_jabatan'] }}">
                             {{ $jabatan['nama_jabatan'] }}
                         </option>
                         @endforeach

@@ -118,7 +118,7 @@
                         </div>
 
 
-                        @if ($applications->count() > 0)
+                        @if (!empty($applications) && $applications->count() > 0)
 
                         @if ($applications->first()->status == 'approved')
                         @include('partials.status_lamaran_approved');
@@ -129,7 +129,6 @@
                         @endif
 
                         @else
-
                         @include('partials.form_pengajuan_lamaran');
 
                         @endif

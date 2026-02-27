@@ -204,7 +204,7 @@
                 </div>
 
                 {{-- status perkawinan --}}
-                <div class="md:col-span-2">
+                {{-- <div class="md:col-span-2">
                     <label for="status_perkawinan" class="label">
                         Status Perkawinan
                         *
@@ -242,6 +242,42 @@
                             'selected' :
                             '' }}>
                             Cerai Mati
+                        </option>
+
+                    </select>
+
+                    @error('status_perkawinan')
+                    <p class="text-danger text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                    @enderror
+                </div> --}}
+
+                {{-- status perkawinan --}}
+                <div class="md:col-span-2">
+                    <label for="status_perkawinan" class="label">
+                        Status Perkawinan
+                        *
+                    </label>
+
+                    <select name="status_perkawinan" id="status_perkawinan"
+                        class="input w-full @error('status_perkawinan') text-danger @enderror">
+
+                        <option value="">-- Pilih Status Perkawinan --</option>
+
+                        <option value="Menikah" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '')
+                            ==
+                            'Menikah' ?
+                            'selected' :
+                            '' }}>
+                            Menikah
+                        </option>
+
+                        <option value="Lajang" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '') ==
+                            'Lajang' ?
+                            'selected' :
+                            '' }}>
+                            Lajang
                         </option>
 
                     </select>
@@ -667,6 +703,16 @@
                     @enderror
                 </div>
 
+                <div class="md:col-span-2">
+                    <label for="status_berlaku_sim" class="label">
+                        Status Masa Berlaku SIM*
+                    </label>
+
+                    <input type="text" name="status_berlaku_sim" id="status_berlaku_sim"
+                        class="input w-full bg-gray-100" readonly>
+                    <small>Akan otomatis <b>"TIDAK LULUS"</b> apabila masa berlaku SIM Anda kurang dari 1 tahun.</small>
+                </div>
+
                 {{-- Upload SIM --}}
                 <div class="border-2 border-dashed rounded-xl p-6 text-center
                     @error('file_sim') text-danger @else border-gray-300 @enderror">
@@ -736,6 +782,87 @@
 
                     @endif
 
+                </div>
+
+                {{-- jenis sim sebelumnya --}}
+                <div class="md:col-span-2">
+                    <label for="jenis_sim_sebelumnya" class="label">
+                        Jenis SIM Sebelumnya
+                        *
+                    </label>
+
+                    <select name="jenis_sim_sebelumnya" id="jenis_sim_sebelumnya"
+                        class="input w-full @error('jenis_sim_sebelumnya') text-danger @enderror">
+
+                        <option value="">-- Pilih Jenis SIM Sebelumnya --</option>
+
+                        <option value="Tidak Memiliki SIM" {{ old('jenis_sim_sebelumnya', $applicant->
+                            jenis_sim_sebelumnya ?? '')
+                            ==
+                            'Tidak Memiliki SIM' ?
+                            'selected' :
+                            '' }}>
+                            Tidak Memiliki SIM
+                        </option>
+
+
+                        <option value="SIM A" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                            ==
+                            'SIM A' ?
+                            'selected' :
+                            '' }}>
+                            SIM A
+                        </option>
+
+                        <option value="SIM B1" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                            ==
+                            'SIM B1' ?
+                            'selected' :
+                            '' }}>
+                            SIM B1
+                        </option>
+
+                        <option value="SIM B1 Umum" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ??
+                            '')
+                            ==
+                            'SIM B1 Umum' ?
+                            'selected' :
+                            '' }}>
+                            SIM B1 Umum
+                        </option>
+
+                        <option value="SIM B2" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                            ==
+                            'SIM B2' ?
+                            'selected' :
+                            '' }}>
+                            SIM B2
+                        </option>
+
+                        <option value="SIM B2 Umum" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ??
+                            '')
+                            ==
+                            'SIM B2 Umum' ?
+                            'selected' :
+                            '' }}>
+                            SIM B2 Umum
+                        </option>
+
+                        <option value="SIM C" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                            ==
+                            'SIM C' ?
+                            'selected' :
+                            '' }}>
+                            SIM C
+                        </option>
+
+                    </select>
+
+                    @error('jenis_sim_sebelumnya')
+                    <p class="text-danger text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                    @enderror
                 </div>
 
                 {{-- END OF SIM SECTION --}}
@@ -2190,6 +2317,46 @@ bindFilePreview('file_transkrip', 'file_transkrip_filename');
 bindFilePreview('file_paklaring', 'file_paklaring_filename');
 
 
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const tanggalInput = document.getElementById("tanggal_berlaku_sim");
+    const statusInput  = document.getElementById("status_berlaku_sim");
+
+    function hitungStatus() {
+        const tanggalValue = tanggalInput.value;
+
+        if (!tanggalValue) {
+            statusInput.value = "";
+            return;
+        }
+
+        const tanggalBerlaku = new Date(tanggalValue);
+        const today = new Date();
+
+        // Tambah 1 tahun dari hari ini
+        const batas = new Date();
+        batas.setFullYear(today.getFullYear() + 1);
+
+        if (tanggalBerlaku > batas) {
+            statusInput.value = "LULUS";
+            statusInput.classList.remove("text-red-600");
+            statusInput.classList.add("text-green-600");
+        } else {
+            statusInput.value = "TIDAK LULUS";
+            statusInput.classList.remove("text-green-600");
+            statusInput.classList.add("text-red-600");
+        }
+    }
+
+    // Trigger saat tanggal berubah
+    tanggalInput.addEventListener("change", hitungStatus);
+
+    // Jika edit data lama (pre-filled value)
+    hitungStatus();
+});
 </script>
 
 @endsection

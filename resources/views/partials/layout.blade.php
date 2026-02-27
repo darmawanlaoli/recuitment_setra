@@ -55,9 +55,11 @@
 
                 <!-- Tab Content: Profile Information -->
                 <div id="content-profile" class="tab-content">
-                    <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="grid {{ $sidebar == true ? 'lg:grid-cols-3' : 'lg:grid-cols-6' }} gap-8">
+
+
                         <!-- Profile Photo Section -->
-                        <div class="lg:col-span-1">
+                        {{-- <div class="lg:col-span-1">
                             <div class="card sticky top-24">
                                 <div class="text-center">
                                     <div class="relative inline-block mb-6">
@@ -115,7 +117,13 @@
 
 
                             </div>
-                        </div>
+                        </div> --}}
+
+                        @if($sidebar == true)
+
+                        @include('partials.sidebar')
+
+                        @endif
 
                         @yield('content')
 

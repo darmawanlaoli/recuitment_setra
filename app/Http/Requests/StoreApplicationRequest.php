@@ -35,6 +35,7 @@ class StoreApplicationRequest extends FormRequest
             'nomor_sim' => 'nullable|string|max:30',
             'file_sim' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'jenis_sim' => 'nullable|string|max:50',
+            'jenis_sim_sebelumnya' => 'nullable|string|max:50',
             'tanggal_berlaku_sim' => 'nullable|date',
 
             'nomor_npwp' => 'nullable|string|max:30',

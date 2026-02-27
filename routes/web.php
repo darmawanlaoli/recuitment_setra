@@ -23,6 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit/{id}', [DashboardController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile/update/{id}', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
+    Route::get('/answer_question/{id}', [DashboardController::class, 'answerQuestion'])->name('answer_question');
+    Route::post('/store_answer/{id}', [DashboardController::class, 'storeAnswer'])->name('store_answer');
+
     Route::post('/lamaran/store', [DashboardController::class, 'storeLamaran'])->name('lamaran.store');
 });
 

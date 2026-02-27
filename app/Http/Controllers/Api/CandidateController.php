@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class CandidateController extends Controller
 {
-    public function index()
+    public function index($area)
     {
-        return response()->json(['data' => Application::all()]);
+        $area = urldecode($area);
+
+        $query = Application::query();
+
+        if (!empty($area)) {
+            $query->where('area', $area);
+        }
+
+        return response()->json([
+            'data' => $query->get()
+        ]);
     }
 
     public function show($id)
@@ -23,7 +33,12 @@ class CandidateController extends Controller
     {
         $candidate = Application::findOrFail($id);
 
-        $candidate->update($request->only(['status']));
+        $request->validate([
+            'status' => 'required|string',
+            'approved_by' => 'required',
+        ]);
+
+        $candidate->update($request->only(['status','remark', 'approved_by', 'approved_at', 'remark', 'tanggal_interview']));
         return response()->json([
             'message' => 'Candidate updated successfully',
             'data' => $candidate

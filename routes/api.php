@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\CandidateController;
 // });
 
 Route::middleware([App\Http\Middleware\ApiKeyMiddleware::class])->group(function () {
-    Route::get('/candidates', [CandidateController::class, 'index']);
-    Route::get('/candidates/{id}', [CandidateController::class, 'show']);
+    Route::get('/candidates/{area}', [CandidateController::class, 'index']);
+    Route::get('/candidates/show/{id}', [CandidateController::class, 'show']);
     Route::put('/candidates/{id}', [CandidateController::class, 'update']);
 });

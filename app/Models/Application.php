@@ -13,6 +13,7 @@ class Application extends Model
         'area',
         'posisi',
         'status',
+        'tanggal_interview',
         'approved_by',
         'approved_at',
         'remark',
@@ -32,6 +33,7 @@ class Application extends Model
         'nomor_sim',
         'file_sim',
         'jenis_sim',
+        'jenis_sim_sebelumnya',
         'tanggal_berlaku_sim',
         'nomor_npwp',
         'file_npwp',
@@ -77,10 +79,114 @@ class Application extends Model
         'pengalaman_kerja',
         'alasan_melamar',
         'gaji_diharapkan',
-
-
         'deleted_at',
     ];
+
+    public function isProfileComplete(): bool
+    {
+        $requiredFields = [
+            'provinsi',
+            // 'kabupaten',
+            // 'area',
+            // 'posisi',
+            // 'name',
+            // 'nama_panggilan',
+            // 'tempat_lahir',
+            // 'tanggal_lahir',
+            // 'agama',
+            // 'jenis_kelamin',
+            // 'kewarganegaraan',
+            // 'status_perkawinan',
+            // 'golongan_darah',
+            // 'nomor_ktp',
+            // 'file_ktp',
+            // 'nomor_kk',
+            // 'file_kk',
+            // 'nomor_sim',
+            // 'file_sim',
+            // 'jenis_sim',
+            // 'jenis_sim_sebelumnya',
+            // 'tanggal_berlaku_sim',
+            // 'nomor_npwp',
+            // 'file_npwp',
+            // 'nomor_rekening',
+            // 'file_rekening',
+            // 'file_skck',
+            // 'alamat_ktp',
+            // 'alamat_domisili',
+            // 'status_tempat_tinggal',
+            // 'nomor_telepon',
+            // 'email',
+            // 'pendidikan',
+            // 'jurusan',
+            // 'universitas',
+            // 'tahun_lulus',
+            // 'ipk',
+            // 'file_ijazah',
+            // 'file_transkrip',
+            // 'jenis_kendaraan',
+            // 'merk_kendaraan',
+            // 'kepemilikan_kendaraan',
+            // 'bersedia_luar_kota',
+            // 'bersedia_penempatan',
+            // 'nama_ibu_kandung',
+            // 'tempat_lahir_ibu_kandung',
+            // 'tanggal_lahir_ibu_kandung',
+            // 'pekerjaan_ibu',
+            // 'jabatan_ibu',
+            // 'perusahaan_ibu',
+            // 'nama_referensi',
+            // 'alamat_referensi',
+            // 'nomor_telepon_referensi',
+            // 'pekerjaan_referensi',
+            // 'hubungan_dengan_referensi',
+            // 'instagram',
+            // 'facebook',
+            // 'tiktok',
+            // 'linkedin',
+            // 'hobby',
+            // 'skill',
+            // 'pengalaman_organisasi',
+            // 'file_paklaring',
+            // 'pengalaman_kerja',
+            // 'alasan_melamar',
+            // 'gaji_diharapkan',
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($this->$field)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function getCompletionPercentageAttribute()
+    {
+        $fields = [
+            'nik',
+            'nama_lengkap',
+            'tanggal_lahir',
+            'jenis_kelamin',
+            'email',
+            'no_hp',
+            'alamat',
+            'npwp',
+            'rekening_bank',
+            'nama_bank',
+        ];
+
+        $filled = 0;
+
+        foreach ($fields as $field) {
+            if (!empty($this->$field)) {
+                $filled++;
+            }
+        }
+
+        return round(($filled / count($fields)) * 100);
+    }
 
     public function province()
     {

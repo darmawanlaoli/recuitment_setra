@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Application;
+use App\Models\RecruitmentQuestion;
+use App\Models\RecruitmentAnswer;
 use App\Services\Hrms\AreaService;
 use App\Services\Hrms\JabatanService;
 use App\Http\Requests\ProfileUpdateRequest;
@@ -20,17 +22,25 @@ class DashboardController extends Controller
 
     public function index(
         AreaService $areaService,
-        JabatanService $jabatanService
+        JabatanService $jabatanService,
     )
     {
+
         $areas = $areaService->all();
         $jabatans = $jabatanService->all();
 
         // Ambil provinsi
         $response = Http::get('https://api.datawilayah.com/api/provinsi.json');
         $provinsi = $response->json()['data'] ?? [];
-        $applications = Application::where('id_user', Auth::id())->get();
-        return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications'));
+        $applications = Application::where('id_user', Auth::id())->first();
+
+        if ($applications && $applications->isProfileComplete()) {
+            $is_complete = true;
+        } else {
+            $is_complete = false;
+        }
+
+        return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications', 'is_complete'));
     }
 
     public function profile()
@@ -142,7 +152,8 @@ class DashboardController extends Controller
     public function editProfile($id)
     {
         $applicant = Application::findOrFail($id);
-        return view('edit_profile', compact('applicant'));
+        $sidebar = true;
+        return view('edit_profile', compact('applicant', 'sidebar'));
     }
 
     // public function updateProfile(Request $request, $id)
@@ -175,6 +186,77 @@ class DashboardController extends Controller
         $service->update($request, $id);
 
         return redirect()->back()->with('success', 'Application updated successfully.');
+    }
+
+    public function answerQuestion($applicationId): View
+    {
+
+        // $questions = RecruitmentQuestion::where('is_active', true)
+        // ->orderBy('sort_order')
+        // ->get();
+
+        $questions = RecruitmentQuestion::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        $answers = RecruitmentAnswer::where('application_id', $applicationId)
+            ->get()
+            ->keyBy('question_id');
+
+        $sidebar = false;
+
+        return view('answer_question', compact(
+            'questions',
+            'answers',
+            'applicationId',
+            'sidebar'
+        ));
+    }
+
+    public function storeAnswer(Request $request, $applicationId)
+    {
+        $questions = RecruitmentQuestion::where('is_active', true)->get();
+
+        $rules = [];
+
+        foreach ($questions as $question) {
+
+            if ($question->is_required) {
+                $rules["answers.{$question->id}.value"] = 'required|in:YA,TIDAK';
+            } else {
+                $rules["answers.{$question->id}.value"] = 'nullable|in:YA,TIDAK';
+            }
+
+            if ($question->question_type === 'yes_no_with_explanation') {
+                $rules["answers.{$question->id}.explanation"] = 'nullable|string';
+            }
+        }
+
+        $validated = $request->validate($rules);
+
+        foreach ($questions as $question) {
+
+            $answerValue = $validated['answers'][$question->id]['value'] ?? null;
+            $explanation = $validated['answers'][$question->id]['explanation'] ?? null;
+
+            // Jangan simpan jika benar-benar kosong
+            if (!$answerValue && !$explanation) {
+                continue;
+            }
+
+            RecruitmentAnswer::updateOrCreate(
+                [
+                    'application_id' => $applicationId,
+                    'question_id' => $question->id
+                ],
+                [
+                    'answer_value' => $answerValue,
+                    'explanation' => $explanation
+                ]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Jawaban berhasil disimpan.');
     }
 
 }

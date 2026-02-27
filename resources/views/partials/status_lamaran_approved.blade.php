@@ -12,8 +12,33 @@
             date('d F Y', strtotime($applications->first()->tanggal_interview)) }}.</b>
     </p>
 
-    <p>Silahkan click link di bawah ini untuk melengkapi profile Anda.</p>
+    <hr>
 
-    <a href="{{ route('profile.edit', $applications->first()->id) }}" class="btn btn-primary mt-3">Lengkapi Profile</a>
+    @if($is_complete === false)
+
+    <p class="text-danger mt-3">Profile Anda belum lengkap, segera lengkapi agar bisa lanjut ke tahap
+        berikutnya
+    </p>
+
+    <a href="{{ route('profile.edit', $applications->first()->id) }}" class="btn btn-primary mt-3">Lengkapi Data</a>
+
+    <button class="btn btn-outline mt-3" onclick="alert('Silahkan lengkapi data pribadi terlebih dahulu')">Jawab
+        Pertanyaan</button>
+
+
+    @else
+
+    <p class="text-primary">Terimakasih, profile Anda telah lengkap. Silahkan lanjut menjawab pertanyaan.</p>
+
+    <a href="{{ route('profile.edit', $applications->first()->id) }}" class="btn btn-primary mt-3">Lihat Profile</a>
+
+    <a href="{{ route('answer_question', $applications->first()->id) }}" class="btn btn-outline mt-3">Jawab
+        Pertanyaan</a>
+
+    @endif
+
+    <p>{{ $applications->first()->remark }}</p>
+
+
 
 </div>

@@ -243,7 +243,7 @@
 
                         <input type="text" name="status_berlaku_sim" id="status_berlaku_sim"
                             class="input w-full bg-gray-100" readonly>
-                        <small>Akan otomatis <b>"TIDAK LULUS"</b> apabila masa berlaku SIM Anda kurang dari 1
+                        <small>Akan otomatis <b>"TIDAK LULUS"</b> apabila umur SIM kurang dari 1
                             tahun.</small>
                     </div>
 

@@ -17,31 +17,209 @@
             <h3 class="text-xl font-bold text-text-primary mb-2 font-heading">
                 {{ Auth::user()->name }}</h3>
             <p class="text-sm text-text-secondary mb-4 font-caption">Pencari Kerja</p>
-            <div class="flex items-center justify-center gap-2 text-sm text-text-secondary mb-6">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                        clip-rule="evenodd" />
-                </svg>
-                <span>Tahap Melamar Kerja</span>
-            </div>
-            <div class="space-y-3">
-                <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
-                    <span class="text-sm text-text-secondary">Ajukan Lamaran</span>
-                    <span class="text-lg font-bold text-primary font-heading">0</span>
+
+            <div class="space-y-1">
+
+                <div class="flex items-center justify-center gap-2 text-sm text-text-secondary">
+                    <span>Tahap Melamar Kerja:</span>
                 </div>
-                <div class="flex items-center justify-between p-3 bg-success-50 rounded-lg">
-                    <span class="text-sm text-text-secondary">Menunggu Approval</span>
-                    <span class="text-lg font-bold text-success-600 font-heading">0</span>
+
+                @php
+                $hasApplication = !is_null($applications);
+                $status = $applications->status ?? null;
+                $isApproved = $status === 'approved';
+                $isPendingOrReject= in_array($status, ['pending','rejected']);
+                $profileDone = $is_profile_completed;
+                $questionDone = $applications->is_question_completed ?? false;
+
+                /*
+                STATE MATRIX
+
+                1. Belum pernah apply
+                2. Pending / Rejected
+                3. Approved
+                4. Profile completed
+                */
+
+                @endphp
+
+                @if(!$hasApplication || $isPendingOrReject)
+
+                {{-- AJUKAN LAMARAN AKTIF --}}
+                <div onclick="document.location.href='{{ route('dashboard') }}'"
+                    class="flex items-center justify-between p-3 bg-primary rounded-lg cursor-pointer">
+                    <span class="text-sm text-white">Ajukan Lamaran</span>
+                    <span class="text-lg font-bold text-white font-heading">✓</span>
                 </div>
-                <div class="flex items-center justify-between p-3 bg-warning-50 rounded-lg">
-                    <span class="text-sm text-text-secondary">Mengisi Data Diri</span>
-                    <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+
+                @php
+                $alertMessage = !$hasApplication
+                ? 'Silahkan mengajukan lamaran terlebih dahulu'
+                : 'Status pengajuan Anda masih PENDING atau REJECTED';
+                @endphp
+
+                @foreach (['Mengisi Data Diri','Mengisi Pertanyaan','Mengerjakan Test'] as $menu)
+                <div onclick="alert('{{ $alertMessage }}')"
+                    class="flex items-center justify-between p-3 bg-disable rounded-lg cursor-pointer">
+                    <span class="text-sm text-secondary">{{ $menu }}</span>
+                    <span class="text-lg font-bold text-danger font-heading">X</span>
                 </div>
-                <div class="flex items-center justify-between p-3 bg-warning-50 rounded-lg">
-                    <span class="text-sm text-text-secondary">Mengisi Form Pertanyaan</span>
-                    <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+                @endforeach
+
+                @endif
+
+
+                @if($isApproved)
+
+                {{-- AJUKAN LAMARAN NONAKTIF --}}
+                <div onclick="alertMessage('Anda sudah mengajukan lamaran')"
+                    class="flex items-center justify-between p-3 bg-disable rounded-lg cursor-pointer">
+                    <span class="text-sm text-secondary">Ajukan Lamaran</span>
+                    <span class="text-lg font-bold text-danger font-heading">X</span>
                 </div>
+
+                {{-- MENGISI DATA DIRI AKTIF --}}
+                @if(!$profileDone)
+                <div onclick="document.location.href='{{ route('profile.edit',$applications->id) }}'"
+                    class="flex items-center justify-between p-3 bg-primary rounded-lg">
+                    <span class="text-sm text-white">Mengisi Data Diri</span>
+                    <span class="text-lg font-bold text-white font-heading">✓</span>
+                </div>
+
+                {{-- Pertanyaan & Test Nonaktif --}}
+                @foreach (['Mengisi Pertanyaan','Mengerjakan Test'] as $menu)
+                <div onclick="alert('Lengkapi Data Diri terlebih dahulu')"
+                    class="flex items-center justify-between mb-4 p-3 bg-disable rounded-lg cursor-pointer">
+                    <span class="text-sm text-secondary">{{ $menu }}</span>
+                    <span class="text-lg font-bold text-danger font-heading">X</span>
+                </div>
+                @endforeach
+
+
+                @else
+
+                {{-- Data Diri Done --}}
+                <div class="flex items-center justify-between p-3 bg-success rounded-lg">
+                    <span class="text-sm text-white">Mengisi Data Diri</span>
+                    <span class="text-lg font-bold text-white font-heading">✓</span>
+                </div>
+
+                {{-- Pertanyaan Aktif --}}
+                @if(!$questionDone)
+                <div onclick="document.location.href='{{ route('answer_question',$applications->id) }}'"
+                    class="flex items-center justify-between p-3 bg-primary rounded-lg cursor-pointer">
+                    <span class="text-sm text-white">Mengisi Pertanyaan</span>
+                    <span class="text-lg font-bold text-white font-heading">✓</span>
+                </div>
+
+                <div onclick="alertMessage('Test belum tersedia, silahkan cek secara berkala')"
+                    class="flex items-center justify-between mb-4 p-3 bg-disable rounded-lg cursor-pointer">
+                    <span class="text-sm text-secondary">Mengerjakan Test</span>
+                    <span class="text-lg font-bold text-danger font-heading">X</span>
+                </div>
+
+                @else
+
+                {{-- Semua selesai → Test Aktif --}}
+                <div class="flex items-center justify-between p-3 bg-success rounded-lg">
+                    <span class="text-sm text-white">Mengisi Pertanyaan</span>
+                    <span class="text-lg font-bold text-white font-heading">✓</span>
+                </div>
+
+                <a href="{{ route('test.index') }}" class="p-1">
+                    <div class="flex items-center justify-between p-3 bg-primary rounded-lg">
+                        <span class="text-sm text-white">Mengerjakan Test</span>
+                        <span class="text-lg font-bold text-white font-heading">✓</span>
+                    </div>
+                </a>
+
+                @endif
+                @endif
+                @endif
+
+                {{-- <a class="p-1" href="{{ route('dashboard') }}">
+                    <div class="flex items-center justify-between p-3 bg-primary rounded-lg">
+                        <span class="text-sm text-white">Ajukan Lamaran</span>
+                        <span class="text-lg font-bold text-primary font-heading">0</span>
+                    </div>
+                </a>
+
+                @if($applications)
+
+                @if($applications->status == 'pending' || $applications->status == 'rejected')
+
+                <div>
+                    <div onclick="alert('Status pengajuan Anda masih PENDING atau REJECTED')"
+                        class="flex items-center justify-between mb-4 p-3 bg-disable rounded-lg">
+                        <span class="text-sm text-secodary">Mengisi Data Diri</span>
+                        <span class="text-lg font-bold text-danger font-heading">X</span>
+                    </div>
+
+                    <div onclick="alert('Status pengajuan Anda masih PENDING atau REJECTED')"
+                        class="flex items-center justify-between mb-4 p-3 bg-disable rounded-lg">
+                        <span class="text-sm text-secodary">Mengisi Pertanyaan </span>
+                        <span class="text-lg font-bold text-danger font-heading">X</span>
+                    </div>
+
+                    <div onclick="alert('Status pengajuan Anda masih PENDING atau REJECTED')"
+                        class="flex items-center justify-between mb-4 p-3 bg-disable rounded-lg">
+                        <span class="text-sm text-secodary">Mengerjakan Test</span>
+                        <span class="text-lg font-bold text-danger font-heading">X</span>
+                    </div>
+                </div>
+
+                @else
+
+                <div>
+                    <a href="" class="p-1">
+                        <div class="flex items-center justify-between p-3 bg-disable rounded-lg">
+                            <span class="text-sm text-secodary">Mengisi Data Diri</span>
+                            <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+                        </div>
+                    </a>
+
+                    <a href="" class="p-1">
+                        <div class="flex items-center justify-between p-3 bg-disable rounded-lg">
+                            <span class="text-sm text-secodary">Mengisi Pertanyaan</span>
+                            <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+                        </div>
+                    </a>
+
+                    <a href="" class="p-1">
+                        <div class="flex items-center justify-between p-3 bg-disable rounded-lg">
+                            <span class="text-sm text-secodary">Mengerjakan Test</span>
+                            <span class="text-lg font-bold text-warning-600 font-heading">0</span>
+                        </div>
+                    </a>
+                </div>
+
+                @endif;
+
+                @else
+
+                <div>
+                    <div onclick="alert('Silahkan mengajukan lamaran terlebih dahulu')"
+                        class="flex items-center justify-between p-3 bg-disable rounded-lg">
+                        <span class="text-sm text-secodary">Mengisi Data Diri</span>
+                        <span class="text-lg font-bold text-danger font-heading">X</span>
+                    </div>
+
+                    <div onclick="alert('Silahkan mengajukan lamaran terlebih dahulu')"
+                        class="flex items-center justify-between p-3 bg-disable rounded-lg">
+                        <span class="text-sm text-secodary">Mengisi Pertanyaan </span>
+                        <span class="text-lg font-bold text-danger font-heading">X</span>
+                    </div>
+
+                    <div onclick="alert('Silahkan mengajukan lamaran terlebih dahulu')"
+                        class="flex items-center justify-between p-3 bg-disable rounded-lg">
+                        <span class="text-sm text-secodary">Mengerjakan Test</span>
+                        <span class="text-lg font-bold text-danger font-heading">X</span>
+                    </div>
+                </div>
+
+                @endif --}}
+
+
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

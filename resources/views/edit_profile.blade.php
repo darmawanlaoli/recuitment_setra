@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="lg:col-span-2">
-    <form action="{{ route('profile.update', $applicant->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('profile.update', $applications->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="card">
@@ -22,17 +22,17 @@
                 </div>
             </div>
 
-            <input type="text" hidden value="{{ $applicant->id_user }}" name="id_user">
+            <input type="text" hidden value="{{ $applications->id_user }}" name="id_user">
 
-            <input type="text" hidden value="{{ $applicant->provinsi }}" name="provinsi">
+            <input type="text" hidden value="{{ $applications->provinsi }}" name="provinsi">
 
-            <input type="text" hidden value="{{ $applicant->kabupaten }}" name="kabupaten">
+            <input type="text" hidden value="{{ $applications->kabupaten }}" name="kabupaten">
 
-            <input type="text" hidden value="{{ $applicant->area }}" name="area">
+            <input type="text" hidden value="{{ $applications->area }}" name="area">
 
-            <input type="text" hidden value="{{ $applicant->posisi }}" name="posisi">
+            <input type="text" hidden value="{{ $applications->posisi }}" name="posisi">
 
-            <input type="text" hidden value="{{ $applicant->status }}" name="status">
+            <input type="text" hidden value="{{ $applications->status }}" name="status">
 
             <div class=" grid md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
@@ -41,7 +41,7 @@
                     </label>
 
                     <input type="text" name="name" id="name" placeholder="Masukkan nama lengkap Anda"
-                        value="{{ old('name', $applicant->name ?? '') }}"
+                        value="{{ old('name', $applications->name ?? '') }}"
                         class="input w-full @error('name') text-danger @enderror">
 
                     @error('name')
@@ -58,7 +58,7 @@
 
                     <input type="text" name="nama_panggilan" id="nama_panggilan"
                         placeholder="Masukkan nama panggilan Anda"
-                        value="{{ old('nama_panggilan', $applicant->nama_panggilan ?? '') }}"
+                        value="{{ old('nama_panggilan', $applications->nama_panggilan ?? '') }}"
                         class="input w-full @error('nama_panggilan') text-danger @enderror">
 
                     @error('nama_panggilan')
@@ -79,14 +79,14 @@
 
                         <option value="">-- Pilih Jenis Kelamin --</option>
 
-                        <option value="Laki-laki" {{ old('jenis_kelamin', $applicant->jenis_kelamin ?? '') ==
+                        <option value="Laki-laki" {{ old('jenis_kelamin', $applications->jenis_kelamin ?? '') ==
                             'Laki-laki' ?
                             'selected' :
                             '' }}>
                             Laki-laki
                         </option>
 
-                        <option value="Perempuan" {{ old('jenis_kelamin', $applicant->jenis_kelamin ?? '') ==
+                        <option value="Perempuan" {{ old('jenis_kelamin', $applications->jenis_kelamin ?? '') ==
                             'Perempuan' ?
                             'selected' :
                             '' }}>
@@ -109,7 +109,7 @@
                     </label>
 
                     <input type="text" name="tempat_lahir" id="tempat_lahir" placeholder="Masukkan tempat lahir Anda"
-                        value="{{ old('tempat_lahir', $applicant->tempat_lahir ?? '') }}"
+                        value="{{ old('tempat_lahir', $applications->tempat_lahir ?? '') }}"
                         class="input w-full @error('tempat_lahir') text-danger @enderror">
 
                     @error('tempat_lahir')
@@ -125,7 +125,7 @@
                     </label>
 
                     <input type="date" name="tanggal_lahir" id="tanggal_lahir" placeholder="Masukkan tanggal lahir Anda"
-                        value="{{ old('tanggal_lahir', $applicant->tanggal_lahir ?? '') }}"
+                        value="{{ old('tanggal_lahir', $applications->tanggal_lahir ?? '') }}"
                         class="input w-full @error('tanggal_lahir') text-danger @enderror">
 
                     @error('tanggal_lahir')
@@ -145,49 +145,49 @@
 
                         <option value="">-- Pilih Agama --</option>
 
-                        <option value="Islam" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Islam" {{ old('agama', $applications->agama ?? '') ==
                             'Islam' ?
                             'selected' :
                             '' }}>
                             Islam
                         </option>
 
-                        <option value="Kristen" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Kristen" {{ old('agama', $applications->agama ?? '') ==
                             'Kristen' ?
                             'selected' :
                             '' }}>
                             Kristen
                         </option>
 
-                        <option value="Katolik" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Katolik" {{ old('agama', $applications->agama ?? '') ==
                             'Katolik' ?
                             'selected' :
                             '' }}>
                             Katolik
                         </option>
 
-                        <option value="Hindu" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Hindu" {{ old('agama', $applications->agama ?? '') ==
                             'Hindu' ?
                             'selected' :
                             '' }}>
                             Hindu
                         </option>
 
-                        <option value="Buddha" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Buddha" {{ old('agama', $applications->agama ?? '') ==
                             'Buddha' ?
                             'selected' :
                             '' }}>
                             Buddha
                         </option>
 
-                        <option value="Konghucu" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Konghucu" {{ old('agama', $applications->agama ?? '') ==
                             'Konghucu' ?
                             'selected' :
                             '' }}>
                             Konghucu
                         </option>
 
-                        <option value="Lainnya" {{ old('agama', $applicant->agama ?? '') ==
+                        <option value="Lainnya" {{ old('agama', $applications->agama ?? '') ==
                             'Lainnya' ?
                             'selected' :
                             '' }}>
@@ -215,7 +215,8 @@
 
                         <option value="">-- Pilih Status Perkawinan --</option>
 
-                        <option value="Belum Menikah" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '')
+                        <option value="Belum Menikah" {{ old('status_perkawinan', $applications->status_perkawinan ??
+                            '')
                             ==
                             'Belum Menikah' ?
                             'selected' :
@@ -223,21 +224,23 @@
                             Belum Menikah
                         </option>
 
-                        <option value="Menikah" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '') ==
+                        <option value="Menikah" {{ old('status_perkawinan', $applications->status_perkawinan ?? '') ==
                             'Menikah' ?
                             'selected' :
                             '' }}>
                             Menikah
                         </option>
 
-                        <option value="Cerai Hidup" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '') ==
+                        <option value="Cerai Hidup" {{ old('status_perkawinan', $applications->status_perkawinan ?? '')
+                            ==
                             'Cerai Hidup' ?
                             'selected' :
                             '' }}>
                             Cerai Hidup
                         </option>
 
-                        <option value="Cerai Mati" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '') ==
+                        <option value="Cerai Mati" {{ old('status_perkawinan', $applications->status_perkawinan ?? '')
+                            ==
                             'Cerai Mati' ?
                             'selected' :
                             '' }}>
@@ -265,7 +268,7 @@
 
                         <option value="">-- Pilih Status Perkawinan --</option>
 
-                        <option value="Menikah" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '')
+                        <option value="Menikah" {{ old('status_perkawinan', $applications->status_perkawinan ?? '')
                             ==
                             'Menikah' ?
                             'selected' :
@@ -273,7 +276,7 @@
                             Menikah
                         </option>
 
-                        <option value="Lajang" {{ old('status_perkawinan', $applicant->status_perkawinan ?? '') ==
+                        <option value="Lajang" {{ old('status_perkawinan', $applications->status_perkawinan ?? '') ==
                             'Lajang' ?
                             'selected' :
                             '' }}>
@@ -301,7 +304,7 @@
 
                         <option value="">-- Pilih Golongan Darah --</option>
 
-                        <option value="A" {{ old('golongan_darah', $applicant->golongan_darah ?? '')
+                        <option value="A" {{ old('golongan_darah', $applications->golongan_darah ?? '')
                             ==
                             'A' ?
                             'selected' :
@@ -310,7 +313,7 @@
                         </option>
 
 
-                        <option value="B" {{ old('golongan_darah', $applicant->golongan_darah ?? '')
+                        <option value="B" {{ old('golongan_darah', $applications->golongan_darah ?? '')
                             ==
                             'B' ?
                             'selected' :
@@ -318,7 +321,7 @@
                             B
                         </option>
 
-                        <option value="AB" {{ old('golongan_darah', $applicant->golongan_darah ?? '')
+                        <option value="AB" {{ old('golongan_darah', $applications->golongan_darah ?? '')
                             ==
                             'AB' ?
                             'selected' :
@@ -326,7 +329,7 @@
                             AB
                         </option>
 
-                        <option value="O" {{ old('golongan_darah', $applicant->golongan_darah ?? '')
+                        <option value="O" {{ old('golongan_darah', $applications->golongan_darah ?? '')
                             ==
                             'O' ?
                             'selected' :
@@ -334,7 +337,7 @@
                             O
                         </option>
 
-                        <option value="Tidak Tahu" {{ old('golongan_darah', $applicant->golongan_darah ?? '') ==
+                        <option value="Tidak Tahu" {{ old('golongan_darah', $applications->golongan_darah ?? '') ==
                             'Tidak ' ?
                             'selected' :
                             '' }}>
@@ -363,7 +366,7 @@
 
                         <option value="">-- Pilih Kewarganegaraan --</option>
 
-                        <option value="WNI" {{ old('kewarganegaraan', $applicant->kewarganegaraan ?? '')
+                        <option value="WNI" {{ old('kewarganegaraan', $applications->kewarganegaraan ?? '')
                             ==
                             'WNI' ?
                             'selected' :
@@ -372,7 +375,7 @@
                         </option>
 
 
-                        <option value="WNA" {{ old('kewarganegaraan', $applicant->kewarganegaraan ?? '')
+                        <option value="WNA" {{ old('kewarganegaraan', $applications->kewarganegaraan ?? '')
                             ==
                             'WNA' ?
                             'selected' :
@@ -397,7 +400,7 @@
                     </label>
 
                     <input type="text" name="nomor_ktp" id="nomor_ktp" placeholder="Masukkan nomor KTP Anda"
-                        value="{{ old('nomor_ktp', $applicant->nomor_ktp ?? '') }}"
+                        value="{{ old('nomor_ktp', $applications->nomor_ktp ?? '') }}"
                         class="input w-full @error('nomor_ktp') text-danger @enderror">
 
                     @error('nomor_ktp')
@@ -451,9 +454,9 @@
                 {{-- File KTP --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_ktp) && Storage::disk('public')->exists($applicant->file_ktp))
+                    @if (!empty($applications->file_ktp) && Storage::disk('public')->exists($applications->file_ktp))
 
-                    <a href="{{ asset('storage/' . $applicant->file_ktp) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_ktp) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -497,7 +500,7 @@
                     </label>
 
                     <input type="text" name="nomor_kk" id="nomor_kk" placeholder="Masukkan nomor KK Anda"
-                        value="{{ old('nomor_kk', $applicant->nomor_kk ?? '') }}"
+                        value="{{ old('nomor_kk', $applications->nomor_kk ?? '') }}"
                         class="input w-full @error('nomor_kk') text-danger @enderror">
 
                     @error('nomor_kk')
@@ -551,9 +554,9 @@
                 {{-- File KK --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_kk) && Storage::disk('public')->exists($applicant->file_kk))
+                    @if (!empty($applications->file_kk) && Storage::disk('public')->exists($applications->file_kk))
 
-                    <a href="{{ asset('storage/' . $applicant->file_kk) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_kk) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -602,7 +605,7 @@
 
                         <option value="">-- Pilih Jenis SIM --</option>
 
-                        <option value="Tidak Memiliki SIM" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="Tidak Memiliki SIM" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'Tidak Memiliki SIM' ?
                             'selected' :
@@ -611,7 +614,7 @@
                         </option>
 
 
-                        <option value="SIM A" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="SIM A" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'SIM A' ?
                             'selected' :
@@ -619,7 +622,7 @@
                             SIM A
                         </option>
 
-                        <option value="SIM B1" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="SIM B1" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'SIM B1' ?
                             'selected' :
@@ -627,7 +630,7 @@
                             SIM B1
                         </option>
 
-                        <option value="SIM B1 Umum" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="SIM B1 Umum" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'SIM B1 Umum' ?
                             'selected' :
@@ -635,7 +638,7 @@
                             SIM B1 Umum
                         </option>
 
-                        <option value="SIM B2" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="SIM B2" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'SIM B2' ?
                             'selected' :
@@ -643,7 +646,7 @@
                             SIM B2
                         </option>
 
-                        <option value="SIM B2 Umum" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="SIM B2 Umum" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'SIM B2 Umum' ?
                             'selected' :
@@ -651,7 +654,7 @@
                             SIM B2 Umum
                         </option>
 
-                        <option value="SIM C" {{ old('jenis_sim', $applicant->jenis_sim ?? '')
+                        <option value="SIM C" {{ old('jenis_sim', $applications->jenis_sim ?? '')
                             ==
                             'SIM C' ?
                             'selected' :
@@ -675,7 +678,7 @@
                     </label>
 
                     <input type="text" name="nomor_sim" id="nomor_sim" placeholder="Masukkan nomor SIM Anda"
-                        value="{{ old('nomor_sim', $applicant->nomor_sim ?? '') }}"
+                        value="{{ old('nomor_sim', $applications->nomor_sim ?? '') }}"
                         class="input w-full @error('nomor_sim') text-danger @enderror">
 
                     @error('nomor_sim')
@@ -693,7 +696,7 @@
 
                     <input type="date" name="tanggal_berlaku_sim" id="tanggal_berlaku_sim"
                         placeholder="Masukkan tanggal berlaku SIM Anda"
-                        value="{{ old('tanggal_berlaku_sim', $applicant->tanggal_berlaku_sim ?? '') }}"
+                        value="{{ old('tanggal_berlaku_sim', $applications->tanggal_berlaku_sim ?? '') }}"
                         class="input w-full @error('tanggal_berlaku_sim') text-danger @enderror">
 
                     @error('tanggal_berlaku_sim')
@@ -747,9 +750,9 @@
                 {{-- File SIM --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_sim) && Storage::disk('public')->exists($applicant->file_sim))
+                    @if (!empty($applications->file_sim) && Storage::disk('public')->exists($applications->file_sim))
 
-                    <a href="{{ asset('storage/' . $applicant->file_sim) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_sim) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -796,7 +799,7 @@
 
                         <option value="">-- Pilih Jenis SIM Sebelumnya --</option>
 
-                        <option value="Tidak Memiliki SIM" {{ old('jenis_sim_sebelumnya', $applicant->
+                        <option value="Tidak Memiliki SIM" {{ old('jenis_sim_sebelumnya', $applications->
                             jenis_sim_sebelumnya ?? '')
                             ==
                             'Tidak Memiliki SIM' ?
@@ -806,7 +809,7 @@
                         </option>
 
 
-                        <option value="SIM A" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                        <option value="SIM A" {{ old('jenis_sim_sebelumnya', $applications->jenis_sim_sebelumnya ?? '')
                             ==
                             'SIM A' ?
                             'selected' :
@@ -814,7 +817,7 @@
                             SIM A
                         </option>
 
-                        <option value="SIM B1" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                        <option value="SIM B1" {{ old('jenis_sim_sebelumnya', $applications->jenis_sim_sebelumnya ?? '')
                             ==
                             'SIM B1' ?
                             'selected' :
@@ -822,7 +825,8 @@
                             SIM B1
                         </option>
 
-                        <option value="SIM B1 Umum" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ??
+                        <option value="SIM B1 Umum" {{ old('jenis_sim_sebelumnya', $applications->jenis_sim_sebelumnya
+                            ??
                             '')
                             ==
                             'SIM B1 Umum' ?
@@ -831,7 +835,7 @@
                             SIM B1 Umum
                         </option>
 
-                        <option value="SIM B2" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                        <option value="SIM B2" {{ old('jenis_sim_sebelumnya', $applications->jenis_sim_sebelumnya ?? '')
                             ==
                             'SIM B2' ?
                             'selected' :
@@ -839,7 +843,8 @@
                             SIM B2
                         </option>
 
-                        <option value="SIM B2 Umum" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ??
+                        <option value="SIM B2 Umum" {{ old('jenis_sim_sebelumnya', $applications->jenis_sim_sebelumnya
+                            ??
                             '')
                             ==
                             'SIM B2 Umum' ?
@@ -848,7 +853,7 @@
                             SIM B2 Umum
                         </option>
 
-                        <option value="SIM C" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
+                        <option value="SIM C" {{ old('jenis_sim_sebelumnya', $applications->jenis_sim_sebelumnya ?? '')
                             ==
                             'SIM C' ?
                             'selected' :
@@ -874,7 +879,7 @@
                     </label>
 
                     <input type="text" name="nomor_npwp" id="nomor_npwp" placeholder="Masukkan nomor NPWP Anda"
-                        value="{{ old('nomor_npwp', $applicant->nomor_npwp ?? '') }}"
+                        value="{{ old('nomor_npwp', $applications->nomor_npwp ?? '') }}"
                         class="input w-full @error('nomor_npwp') text-danger @enderror">
 
                     @error('nomor_npwp')
@@ -915,9 +920,9 @@
                 {{-- File NPWP --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_npwp) && Storage::disk('public')->exists($applicant->file_npwp))
+                    @if (!empty($applications->file_npwp) && Storage::disk('public')->exists($applications->file_npwp))
 
-                    <a href="{{ asset('storage/' . $applicant->file_npwp) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_npwp) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -962,7 +967,7 @@
 
                     <input type="text" name="nomor_rekening" id="nomor_rekening"
                         placeholder="Masukkan nomor rekening bank Anda"
-                        value="{{ old('nomor_rekening', $applicant->nomor_rekening ?? '') }}"
+                        value="{{ old('nomor_rekening', $applications->nomor_rekening ?? '') }}"
                         class="input w-full @error('nomor_rekening') text-danger @enderror">
 
                     @error('nomor_rekening')
@@ -1016,10 +1021,10 @@
                 {{-- File Rekening Bank --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_rekening) &&
-                    Storage::disk('public')->exists($applicant->file_rekening))
+                    @if (!empty($applications->file_rekening) &&
+                    Storage::disk('public')->exists($applications->file_rekening))
 
-                    <a href="{{ asset('storage/' . $applicant->file_rekening) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_rekening) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -1100,9 +1105,9 @@
                 {{-- File SKCK --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_skck) && Storage::disk('public')->exists($applicant->file_skck))
+                    @if (!empty($applications->file_skck) && Storage::disk('public')->exists($applications->file_skck))
 
-                    <a href="{{ asset('storage/' . $applicant->file_skck) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_skck) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -1146,7 +1151,7 @@
                     </label>
 
                     <input type="text" name="alamat_ktp" id="alamat_ktp" placeholder="Masukkan alamat KTP Anda"
-                        value="{{ old('alamat_ktp', $applicant->alamat_ktp ?? '') }}"
+                        value="{{ old('alamat_ktp', $applications->alamat_ktp ?? '') }}"
                         class="input w-full @error('alamat_ktp') text-danger @enderror">
 
                     @error('alamat_ktp')
@@ -1164,7 +1169,7 @@
 
                     <input type="text" name="alamat_domisili" id="alamat_domisili"
                         placeholder="Masukkan alamat domisili Anda"
-                        value="{{ old('alamat_domisili', $applicant->alamat_domisili ?? '') }}"
+                        value="{{ old('alamat_domisili', $applications->alamat_domisili ?? '') }}"
                         class="input w-full @error('alamat_domisili') text-danger @enderror">
 
                     @error('alamat_domisili')
@@ -1189,7 +1194,8 @@
 
                         <option value="">-- Pilih Status Tempat Tinggal --</option>
 
-                        <option value="Milik Sendiri" {{ old('status_tempat_tinggal', $applicant->status_tempat_tinggal
+                        <option value="Milik Sendiri" {{ old('status_tempat_tinggal', $applications->
+                            status_tempat_tinggal
                             ?? '') ==
                             'Milik Sendiri' ?
                             'selected' :
@@ -1197,7 +1203,8 @@
                             Milik Sendiri
                         </option>
 
-                        <option value="Milik Orangtua" {{ old('status_tempat_tinggal', $applicant->status_tempat_tinggal
+                        <option value="Milik Orangtua" {{ old('status_tempat_tinggal', $applications->
+                            status_tempat_tinggal
                             ?? '') ==
                             'Milik Orangtua' ?
                             'selected' :
@@ -1205,7 +1212,8 @@
                             Milik Orangtua
                         </option>
 
-                        <option value="Sewa/Kontrak" {{ old('status_tempat_tinggal', $applicant->status_tempat_tinggal
+                        <option value="Sewa/Kontrak" {{ old('status_tempat_tinggal', $applications->
+                            status_tempat_tinggal
                             ?? '') ==
                             'Sewa/Kontrak' ?
                             'selected' :
@@ -1214,7 +1222,7 @@
                         </option>
 
 
-                        <option value="Indekost" {{ old('status_tempat_tinggal', $applicant->status_tempat_tinggal ??
+                        <option value="Indekost" {{ old('status_tempat_tinggal', $applications->status_tempat_tinggal ??
                             '') ==
                             'Indekost' ?
                             'selected' :
@@ -1223,7 +1231,8 @@
                         </option>
 
 
-                        <option value="Lainnya" {{ old('status_tempat_tinggal', $applicant->status_tempat_tinggal ?? '')
+                        <option value="Lainnya" {{ old('status_tempat_tinggal', $applications->status_tempat_tinggal ??
+                            '')
                             ==
                             'Lainnya' ?
                             'selected' :
@@ -1249,7 +1258,7 @@
                     </label>
 
                     <input type="text" name="nomor_telepon" id="nomor_telepon" placeholder="Masukkan nomor telepon Anda"
-                        value="{{ old('nomor_telepon', $applicant->nomor_telepon ?? '') }}"
+                        value="{{ old('nomor_telepon', $applications->nomor_telepon ?? '') }}"
                         class="input w-full @error('nomor_telepon') text-danger @enderror">
 
                     @error('nomor_telepon')
@@ -1267,7 +1276,7 @@
                     </label>
 
                     <input type="email" name="email" id="email" placeholder="Masukkan email Anda"
-                        value="{{ old('email', $applicant->email ?? '') }}"
+                        value="{{ old('email', $applications->email ?? '') }}"
                         class="input w-full @error('email') text-danger @enderror">
 
                     @error('email')
@@ -1289,42 +1298,42 @@
 
                         <option value="">-- Pilih Pendidikan Terakhir --</option>
 
-                        <option value="SD" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="SD" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'SD' ?
                             'selected' :
                             '' }}>
                             SD
                         </option>
 
-                        <option value="SMP" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="SMP" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'SMP' ?
                             'selected' :
                             '' }}>
                             SMP
                         </option>
 
-                        <option value="SMA/SMK" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="SMA/SMK" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'SMA/SMK' ?
                             'selected' :
                             '' }}>
                             SMA/SMK
                         </option>
 
-                        <option value="D3" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="D3" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'D3' ?
                             'selected' :
                             '' }}>
                             D3
                         </option>
 
-                        <option value="S1" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="S1" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'S1' ?
                             'selected' :
                             '' }}>
                             S1
                         </option>
 
-                        <option value="S2" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="S2" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'S2' ?
                             'selected' :
                             '' }}>
@@ -1332,7 +1341,7 @@
                         </option>
 
 
-                        <option value="S3" {{ old('pendidikan', $applicant->pendidikan ?? '') ==
+                        <option value="S3" {{ old('pendidikan', $applications->pendidikan ?? '') ==
                             'S3' ?
                             'selected' :
                             '' }}>
@@ -1357,7 +1366,7 @@
                     </label>
 
                     <input type="text" name="jurusan" id="jurusan" placeholder="Masukkan jurusan Anda"
-                        value="{{ old('jurusan', $applicant->jurusan ?? '') }}"
+                        value="{{ old('jurusan', $applications->jurusan ?? '') }}"
                         class="input w-full @error('jurusan') text-danger @enderror">
 
                     @error('jurusan')
@@ -1376,7 +1385,7 @@
                     </label>
 
                     <input type="text" name="universitas" id="universitas" placeholder="Masukkan universitas Anda"
-                        value="{{ old('universitas', $applicant->universitas ?? '') }}"
+                        value="{{ old('universitas', $applications->universitas ?? '') }}"
                         class="input w-full @error('universitas') text-danger @enderror">
 
                     @error('universitas')
@@ -1401,7 +1410,7 @@
                         $currentYear = date('Y');
                         @endphp
                         @for ($year = $currentYear; $year >= 1950; $year--)
-                        <option value="{{ $year }}" {{ old('tahun_lulus', $applicant->tahun_lulus ?? '') == $year ?
+                        <option value="{{ $year }}" {{ old('tahun_lulus', $applications->tahun_lulus ?? '') == $year ?
                             'selected' : '' }}>
                             {{ $year }}
                         </option>
@@ -1424,7 +1433,7 @@
                     </label>
 
                     <input type="number" name="ipk" id="ipk" placeholder="Masukkan IPK Anda"
-                        value="{{ old('ipk', $applicant->ipk ?? '') }}"
+                        value="{{ old('ipk', $applications->ipk ?? '') }}"
                         class="input w-full @error('ipk') text-danger @enderror">
 
                     @error('ipk')
@@ -1480,9 +1489,10 @@
                 {{-- File Ijazah --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_ijazah) && Storage::disk('public')->exists($applicant->file_ijazah))
+                    @if (!empty($applications->file_ijazah) &&
+                    Storage::disk('public')->exists($applications->file_ijazah))
 
-                    <a href="{{ asset('storage/' . $applicant->file_ijazah) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_ijazah) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -1562,10 +1572,10 @@
                 {{-- File Transkrip --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_transkrip) &&
-                    Storage::disk('public')->exists($applicant->file_transkrip))
+                    @if (!empty($applications->file_transkrip) &&
+                    Storage::disk('public')->exists($applications->file_transkrip))
 
-                    <a href="{{ asset('storage/' . $applicant->file_transkrip) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_transkrip) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -1613,21 +1623,22 @@
 
                         <option value="">-- Pilih Jenis Kendaraan --</option>
 
-                        <option value="Tidak Memiliki" {{ old('jenis_kendaraan', $applicant->jenis_kendaraan ?? '') ==
+                        <option value="Tidak Memiliki" {{ old('jenis_kendaraan', $applications->jenis_kendaraan ?? '')
+                            ==
                             'Tidak Memiliki' ?
                             'selected' :
                             '' }}>
                             Tidak Memiliki Kendaraan
                         </option>
 
-                        <option value="Sepeda Motor" {{ old('jenis_kendaraan', $applicant->jenis_kendaraan ?? '') ==
+                        <option value="Sepeda Motor" {{ old('jenis_kendaraan', $applications->jenis_kendaraan ?? '') ==
                             'Sepeda Motor' ?
                             'selected' :
                             '' }}>
                             Sepeda Motor
                         </option>
 
-                        <option value="Mobil" {{ old('jenis_kendaraan', $applicant->jenis_kendaraan ?? '') ==
+                        <option value="Mobil" {{ old('jenis_kendaraan', $applications->jenis_kendaraan ?? '') ==
                             'Mobil' ?
                             'selected' :
                             '' }}>
@@ -1650,7 +1661,7 @@
                     </label>
 
                     <input type="text" name="merk_kendaraan" id="merk_kendaraan" placeholder="Masukkan Merk Kendaraan"
-                        value="{{ old('merk_kendaraan', $applicant->merk_kendaraan ?? '') }}"
+                        value="{{ old('merk_kendaraan', $applications->merk_kendaraan ?? '') }}"
                         class="input w-full @error('merk_kendaraan') text-danger @enderror">
 
                     @error('merk_kendaraan')
@@ -1672,7 +1683,8 @@
 
                         <option value="">-- Pilih Kepemilikan Kendaraan --</option>
 
-                        <option value="Milik Sendiri" {{ old('kepemilikan_kendaraan', $applicant->kepemilikan_kendaraan
+                        <option value="Milik Sendiri" {{ old('kepemilikan_kendaraan', $applications->
+                            kepemilikan_kendaraan
                             ?? '') ==
                             'Milik Sendiri' ?
                             'selected' :
@@ -1680,7 +1692,8 @@
                             Milik Sendiri
                         </option>
 
-                        <option value="Milik Orangtua" {{ old('kepemilikan_kendaraan', $applicant->kepemilikan_kendaraan
+                        <option value="Milik Orangtua" {{ old('kepemilikan_kendaraan', $applications->
+                            kepemilikan_kendaraan
                             ?? '') ==
                             'Milik Orangtua' ?
                             'selected' :
@@ -1688,7 +1701,8 @@
                             Milik Orangtua
                         </option>
 
-                        <option value="Milik Kantor" {{ old('kepemilikan_kendaraan', $applicant->kepemilikan_kendaraan
+                        <option value="Milik Kantor" {{ old('kepemilikan_kendaraan', $applications->
+                            kepemilikan_kendaraan
                             ?? '') ==
                             'Milik Kantor' ?
                             'selected' :
@@ -1696,7 +1710,8 @@
                             Milik Kantor
                         </option>
 
-                        <option value="Lainnya" {{ old('kepemilikan_kendaraan', $applicant->kepemilikan_kendaraan ?? '')
+                        <option value="Lainnya" {{ old('kepemilikan_kendaraan', $applications->kepemilikan_kendaraan ??
+                            '')
                             ==
                             'Lainnya' ?
                             'selected' :
@@ -1726,7 +1741,7 @@
 
                         <option value="">-- Pilih--</option>
 
-                        <option value="Ya" {{ old('bersedia_luar_kota', $applicant->bersedia_luar_kota
+                        <option value="Ya" {{ old('bersedia_luar_kota', $applications->bersedia_luar_kota
                             ?? '') ==
                             'Ya' ?
                             'selected' :
@@ -1734,7 +1749,7 @@
                             Ya
                         </option>
 
-                        <option value="Tidak" {{ old('bersedia_luar_kota', $applicant->bersedia_luar_kota
+                        <option value="Tidak" {{ old('bersedia_luar_kota', $applications->bersedia_luar_kota
                             ?? '') ==
                             'Tidak' ?
                             'selected' :
@@ -1762,7 +1777,7 @@
 
                         <option value="">--Pilih--</option>
 
-                        <option value="Ya" {{ old('bersedia_penempatan', $applicant->bersedia_penempatan
+                        <option value="Ya" {{ old('bersedia_penempatan', $applications->bersedia_penempatan
                             ?? '') ==
                             'Ya' ?
                             'selected' :
@@ -1770,7 +1785,7 @@
                             Ya
                         </option>
 
-                        <option value="Tidak" {{ old('bersedia_penempatan', $applicant->bersedia_penempatan
+                        <option value="Tidak" {{ old('bersedia_penempatan', $applications->bersedia_penempatan
                             ?? '') ==
                             'Tidak' ?
                             'selected' :
@@ -1796,7 +1811,7 @@
 
                     <input type="text" name="nama_ibu_kandung" id="nama_ibu_kandung"
                         placeholder="Masukkan Nama Ibu Kandung"
-                        value="{{ old('nama_ibu_kandung', $applicant->nama_ibu_kandung ?? '') }}"
+                        value="{{ old('nama_ibu_kandung', $applications->nama_ibu_kandung ?? '') }}"
                         class="input w-full @error('nama_ibu_kandung') text-danger @enderror">
 
                     @error('nama_ibu_kandung')
@@ -1816,7 +1831,7 @@
 
                     <input type="text" name="tempat_lahir_ibu_kandung" id="tempat_lahir_ibu_kandung"
                         placeholder="Masukkan Tempat Lahir Ibu Kandung"
-                        value="{{ old('tempat_lahir_ibu_kandung', $applicant->tempat_lahir_ibu_kandung ?? '') }}"
+                        value="{{ old('tempat_lahir_ibu_kandung', $applications->tempat_lahir_ibu_kandung ?? '') }}"
                         class="input w-full @error('tempat_lahir_ibu_kandung') text-danger @enderror">
 
                     @error('tempat_lahir_ibu_kandung')
@@ -1836,7 +1851,7 @@
 
                     <input type="date" name="tanggal_lahir_ibu_kandung" id="tanggal_lahir_ibu_kandung"
                         placeholder="Masukkan Tanggal Lahir Ibu Kandung"
-                        value="{{ old('tanggal_lahir_ibu_kandung', $applicant->tanggal_lahir_ibu_kandung ?? '') }}"
+                        value="{{ old('tanggal_lahir_ibu_kandung', $applications->tanggal_lahir_ibu_kandung ?? '') }}"
                         class="input w-full @error('tanggal_lahir_ibu_kandung') text-danger @enderror">
 
                     @error('tanggal_lahir_ibu_kandung')
@@ -1855,7 +1870,7 @@
 
                     <input type="text" name="pekerjaan_ibu" id="pekerjaan_ibu"
                         placeholder="Masukkan Pekerjaan Ibu Kandung"
-                        value="{{ old('pekerjaan_ibu', $applicant->pekerjaan_ibu ?? '') }}"
+                        value="{{ old('pekerjaan_ibu', $applications->pekerjaan_ibu ?? '') }}"
                         class="input w-full @error('pekerjaan_ibu') text-danger @enderror">
 
                     @error('pekerjaan_ibu')
@@ -1874,7 +1889,7 @@
                     </label>
 
                     <input type="text" name="jabatan_ibu" id="jabatan_ibu" placeholder="Masukkan Jabatan Ibu Kandung"
-                        value="{{ old('jabatan_ibu', $applicant->jabatan_ibu ?? '') }}"
+                        value="{{ old('jabatan_ibu', $applications->jabatan_ibu ?? '') }}"
                         class="input w-full @error('jabatan_ibu') text-danger @enderror">
 
                     @error('jabatan_ibu')
@@ -1893,7 +1908,7 @@
 
                     <input type="text" name="perusahaan_ibu" id="perusahaan_ibu"
                         placeholder="Masukkan Perusahaan Terakhir Ibu Kandung"
-                        value="{{ old('perusahaan_ibu', $applicant->perusahaan_ibu ?? '') }}"
+                        value="{{ old('perusahaan_ibu', $applications->perusahaan_ibu ?? '') }}"
                         class="input w-full @error('perusahaan_ibu') text-danger @enderror">
 
                     @error('perusahaan_ibu')
@@ -1914,7 +1929,7 @@
                     </label>
 
                     <input type="text" name="nama_referensi" id="nama_referensi" placeholder="Masukkan Nama Referensi"
-                        value="{{ old('nama_referensi', $applicant->nama_referensi ?? '') }}"
+                        value="{{ old('nama_referensi', $applications->nama_referensi ?? '') }}"
                         class="input w-full @error('nama_referensi') text-danger @enderror">
 
                     @error('nama_referensi')
@@ -1934,7 +1949,7 @@
 
                     <input type="text" name="alamat_referensi" id="alamat_referensi"
                         placeholder="Masukkan Alamat Referensi"
-                        value="{{ old('alamat_referensi', $applicant->alamat_referensi ?? '') }}"
+                        value="{{ old('alamat_referensi', $applications->alamat_referensi ?? '') }}"
                         class="input w-full @error('alamat_referensi') text-danger @enderror">
 
                     @error('alamat_referensi')
@@ -1954,7 +1969,7 @@
 
                     <input type="text" name="nomor_telepon_referensi" id="nomor_telepon_referensi"
                         placeholder="Masukkan Nomor Telepon Referensi"
-                        value="{{ old('nomor_telepon_referensi', $applicant->nomor_telepon_referensi ?? '') }}"
+                        value="{{ old('nomor_telepon_referensi', $applications->nomor_telepon_referensi ?? '') }}"
                         class="input w-full @error('nomor_telepon_referensi') text-danger @enderror">
 
                     @error('nomor_telepon_referensi')
@@ -1974,7 +1989,7 @@
 
                     <input type="text" name="pekerjaan_referensi" id="pekerjaan_referensi"
                         placeholder="Masukkan Pekerjaan Referensi"
-                        value="{{ old('pekerjaan_referensi', $applicant->pekerjaan_referensi ?? '') }}"
+                        value="{{ old('pekerjaan_referensi', $applications->pekerjaan_referensi ?? '') }}"
                         class="input w-full @error('pekerjaan_referensi') text-danger @enderror">
 
                     @error('pekerjaan_referensi')
@@ -1994,7 +2009,7 @@
 
                     <input type="text" name="hubungan_dengan_referensi" id="hubungan_dengan_referensi"
                         placeholder="Masukkan Hubungan dengan Referensi"
-                        value="{{ old('hubungan_dengan_referensi', $applicant->hubungan_dengan_referensi ?? '') }}"
+                        value="{{ old('hubungan_dengan_referensi', $applications->hubungan_dengan_referensi ?? '') }}"
                         class="input w-full @error('hubungan_dengan_referensi') text-danger @enderror">
 
                     @error('hubungan_dengan_referensi')
@@ -2017,7 +2032,7 @@
                     </label>
 
                     <input type="text" name="instagram" id="instagram" placeholder="Masukkan Instagram"
-                        value="{{ old('instagram', $applicant->instagram ?? '') }}"
+                        value="{{ old('instagram', $applications->instagram ?? '') }}"
                         class="input w-full @error('instagram') text-danger @enderror">
 
                     @error('instagram')
@@ -2035,7 +2050,7 @@
                     </label>
 
                     <input type="text" name="facebook" id="facebook" placeholder="Masukkan Facebook"
-                        value="{{ old('facebook', $applicant->facebook ?? '') }}"
+                        value="{{ old('facebook', $applications->facebook ?? '') }}"
                         class="input w-full @error('facebook') text-danger @enderror">
 
                     @error('facebook')
@@ -2053,7 +2068,7 @@
                     </label>
 
                     <input type="text" name="tiktok" id="tiktok" placeholder="Masukkan TikTok"
-                        value="{{ old('tiktok', $applicant->tiktok ?? '') }}"
+                        value="{{ old('tiktok', $applications->tiktok ?? '') }}"
                         class="input w-full @error('tiktok') text-danger @enderror">
 
                     @error('tiktok')
@@ -2070,7 +2085,7 @@
                     </label>
 
                     <input type="text" name="linkedin" id="linkedin" placeholder="Masukkan LinkedIn"
-                        value="{{ old('linkedin', $applicant->linkedin ?? '') }}"
+                        value="{{ old('linkedin', $applications->linkedin ?? '') }}"
                         class="input w-full @error('linkedin') text-danger @enderror">
 
                     @error('linkedin')
@@ -2092,7 +2107,7 @@
                     </label>
 
                     <input type="text" name="hobby" id="hobby" placeholder="Masukkan Hobby"
-                        value="{{ old('hobby', $applicant->hobby ?? '') }}"
+                        value="{{ old('hobby', $applications->hobby ?? '') }}"
                         class="input w-full @error('hobby') text-danger @enderror">
 
                     @error('hobby')
@@ -2111,7 +2126,7 @@
                     </label>
 
                     <input type="text" name="skill" id="skill" placeholder="Masukkan Skill"
-                        value="{{ old('skill', $applicant->skill ?? '') }}"
+                        value="{{ old('skill', $applications->skill ?? '') }}"
                         class="input w-full @error('skill') text-danger @enderror">
 
                     @error('skill')
@@ -2131,7 +2146,7 @@
 
                     <input type="text" name="pengalaman_organisasi" id="pengalaman_organisasi"
                         placeholder="Masukkan Pengalaman Organisasi"
-                        value="{{ old('pengalaman_organisasi', $applicant->pengalaman_organisasi ?? '') }}"
+                        value="{{ old('pengalaman_organisasi', $applications->pengalaman_organisasi ?? '') }}"
                         class="input w-full @error('pengalaman_organisasi') text-danger @enderror">
 
                     @error('pengalaman_organisasi')
@@ -2151,7 +2166,7 @@
 
                     <input type="text" name="pengalaman_kerja" id="pengalaman_kerja"
                         placeholder="Masukkan Pengalaman Kerja"
-                        value="{{ old('pengalaman_kerja', $applicant->pengalaman_kerja ?? '') }}"
+                        value="{{ old('pengalaman_kerja', $applications->pengalaman_kerja ?? '') }}"
                         class="input w-full @error('pengalaman_kerja') text-danger @enderror">
 
                     @error('pengalaman_kerja')
@@ -2207,10 +2222,10 @@
                 {{-- File Paklaring --}}
                 <div class="border-2 border-dashed rounded-xl p-8 text-center transition-colors">
 
-                    @if (!empty($applicant->file_paklaring) &&
-                    Storage::disk('public')->exists($applicant->file_paklaring))
+                    @if (!empty($applications->file_paklaring) &&
+                    Storage::disk('public')->exists($applications->file_paklaring))
 
-                    <a href="{{ asset('storage/' . $applicant->file_paklaring) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $applications->file_paklaring) }}" target="_blank"
                         class="block cursor-pointer">
 
                         <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
@@ -2252,7 +2267,7 @@
                     </label>
 
                     <input type="text" name="alasan_melamar" id="alasan_melamar" placeholder="Masukkan Alasan Melamar"
-                        value="{{ old('alasan_melamar', $applicant->alasan_melamar ?? '') }}"
+                        value="{{ old('alasan_melamar', $applications->alasan_melamar ?? '') }}"
                         class="input w-full @error('alasan_melamar') text-danger @enderror">
 
                     @error('alasan_melamar')
@@ -2272,7 +2287,7 @@
 
                     <input type="text" name="gaji_diharapkan" id="gaji_diharapkan"
                         placeholder="Masukkan Gaji yang Diinginkan"
-                        value="{{ old('gaji_diharapkan', $applicant->gaji_diharapkan ?? '') }}"
+                        value="{{ old('gaji_diharapkan', $applications->gaji_diharapkan ?? '') }}"
                         class="input w-full @error('gaji_diharapkan') text-danger @enderror">
 
                     @error('gaji_diharapkan')

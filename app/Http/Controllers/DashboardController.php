@@ -35,12 +35,14 @@ class DashboardController extends Controller
         $applications = Application::where('id_user', Auth::id())->first();
 
         if ($applications && $applications->isProfileComplete()) {
-            $is_complete = true;
+            $is_profile_completed = true;
         } else {
-            $is_complete = false;
+            $is_profile_completed = false;
         }
 
-        return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications', 'is_complete'));
+        $sidebar = true;
+
+        return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications', 'is_profile_completed', 'sidebar'));
     }
 
     public function profile()
@@ -72,9 +74,15 @@ class DashboardController extends Controller
 
     public function edit(Request $request): View
     {
-        return view('dashboard', [
-            'user' => $request->user(),
-        ]);
+        // return view('dashboard', [
+        //     'user' => $request->user(),
+        //     'applications' => Application::where('id_user', Auth::id())->first()
+        // ]);
+
+        $user = $request->user();
+        $applications = Application::where('id_user', Auth::id())->first();
+
+        return view('dashboard', compact('user', 'applications'));
     }
 
     /**
@@ -146,37 +154,21 @@ class DashboardController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
+        return Redirect::route('dashboard')->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
     }
 
     public function editProfile($id)
     {
-        $applicant = Application::findOrFail($id);
+        $applications = Application::findOrFail($id);
+        if ($applications && $applications->isProfileComplete()) {
+            $is_profile_completed = true;
+        } else {
+            $is_profile_completed = false;
+        }
+
         $sidebar = true;
-        return view('edit_profile', compact('applicant', 'sidebar'));
+        return view('edit_profile', compact('applications', 'sidebar', 'is_profile_completed'));
     }
-
-    // public function updateProfile(Request $request, $id)
-    // {
-    //     $applicant = Application::findOrFail($id);
-
-    //     $request->validate([
-    //         'nama_lengkap' => 'required|string|max:255',
-    //         'nama_panggilan' => 'required|string|max:255',
-    //         'jenis_kelamin' => 'required',
-    //     ]);
-
-    //     $applicant->name = $request->nama_lengkap;
-    //     $applicant->nama_panggilan = $request->nama_panggilan;
-    //     $applicant->jenis_kelamin = $request->jenis_kelamin;
-    //     $applicant->tempat_lahir = $request->tempat_lahir;
-    //     $applicant->tanggal_lahir = $request->tanggal_lahir;
-
-
-    //     $applicant->save();
-
-    //     return redirect()->route('dashboard')->with('success', 'Profil berhasil diperbarui!');
-    // }
 
     public function updateProfile(
         StoreApplicationRequest $request,
@@ -185,7 +177,7 @@ class DashboardController extends Controller
     ) {
         $service->update($request, $id);
 
-        return redirect()->back()->with('success', 'Application updated successfully.');
+        return Redirect::route('dashboard')->with('success', 'Data diri berhasil tersimpan.');
     }
 
     public function answerQuestion($applicationId): View
@@ -256,7 +248,7 @@ class DashboardController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Jawaban berhasil disimpan.');
+        return Redirect::route('dashboard')->with('success', 'Jawaban berhasil disimpan.');
     }
 
 }

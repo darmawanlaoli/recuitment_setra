@@ -24,6 +24,35 @@
 
 
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: @json(session('success')),
+                showConfirmButton: false,
+                timer: 2000
+            });
+        });
+        // alert('Test belum tersedia, silahkan cek secara berkala')
+    </script>
+    @endif
+
+    <script>
+        function alertMessage(message) {
+            Swal.fire({
+            position: "top-end",
+            icon: "info",
+            title: message,
+            showConfirmButton: false,
+            timer: 2000
+            });
+        }
+    </script>
 
     {{-- TOAST --}}
     {{-- <div x-data="{

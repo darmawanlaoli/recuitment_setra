@@ -2197,6 +2197,11 @@ html {
   background-color: rgb(124 58 237 / var(--tw-bg-opacity, 1));
 }
 
+.bg-disable{
+  --tw-bg-opacity: 1;
+  background-color: #e2e2e2
+}
+
 .bg-secondary-100{
   --tw-bg-opacity: 1;
   background-color: rgb(237 233 254 / var(--tw-bg-opacity, 1));
@@ -2379,6 +2384,10 @@ html {
 .object-cover{
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.p-1{
+  padding: 0.1rem;
 }
 
 .p-2{

@@ -15,6 +15,11 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/get_regencies/{id}', [DashboardController::class, 'regencies'])->name('get_regencies');
+    Route::get('/get_area/{id}', [DashboardController::class, 'area'])->name('get_area');
+    Route::get('/get_posisi/{id}', [DashboardController::class, 'posisi'])->name('get_posisi');
+
+
     Route::get('/api/kabupaten/{provinsi}', [DashboardController::class, 'kabupaten']);
     Route::get('/api/kecamatan/{kabupaten}', [DashboardController::class, 'kecamatan']);
     Route::get('/api/desa/{kecamatan}', [DashboardController::class, 'desa']);

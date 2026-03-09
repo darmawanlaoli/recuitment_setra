@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Regency extends Model
 {
-    protected $fillable = ['id', 'province_id', 'name', 'is_active'];
+    protected $table = 'tb_regencies';
 
+    protected $fillable = ['code', 'province_code', 'name'];
+
+    protected $primaryKey = 'code';
     public $incrementing = false;
-    protected $keyType = 'int';
+    protected $keyType = 'string';
 
     public function province()
     {
-        return $this->belongsTo(Province::class);
+        return $this->belongsTo(Province::class, 'province_code', 'code');
     }
 }

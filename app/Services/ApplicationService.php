@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Application;
+use App\Models\Applicants;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,12 +20,12 @@ class ApplicationService
         'file_skck',
     ];
 
-    public function update($request, $id): Application
+    public function update($request, $id): Applicants
     {
         $user = Auth::user();
 
         // Ambil data berdasarkan user login
-        $application = Application::where('id', $id)->firstOrFail();
+        $application = Applicants::where('id', $id)->firstOrFail();
 
         $data = $request->validated();
 

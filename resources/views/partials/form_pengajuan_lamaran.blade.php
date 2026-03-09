@@ -25,14 +25,18 @@
                 <div class="md:col-span-2 mb-3">
                     <label for="address" class="label">Provinsi *</label>
 
-                    <select id="provinsi" name="provinsi" class="input w-full">
+                    <select id="provinsi" name="provinsi" class="input w-full @error('provinsi') invalid @enderror">
                         <option value="">-- Pilih Provinsi --</option>
                         @foreach($provinsi as $p)
-                        <option value="{{ $p['kode_wilayah'] }}">
-                            {{ $p['nama_wilayah'] }}
+                        <option value="{{ $p['code'] }}">
+                            {{ $p['name'] }}
                         </option>
                         @endforeach
                     </select>
+                    @error('provinsi')
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
+                    @enderror
+
                 </div>
 
                 <div class="md:col-span-2 mb-3">
@@ -40,37 +44,40 @@
                     <select id="kabupaten" class="input w-full" name="kabupaten">
                         <option value="">-- Pilih Kabupaten/Kota --</option>
                     </select>
+                    @error('kabupaten')
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="md:col-span-2 mb-3">
                     <label>Area</label>
                     <select id="area" class="input w-full" name="area">
-                        <option value="">-- Pilih Area --</option>
-                        @foreach($areas as $area)
-                        <option value="{{ $area['nama_area'] }}">
-                            {{ $area['nama_area'] }}
-                        </option>
-                        @endforeach
+                        <option value="">-- Area --</option>
                     </select>
+                    <small>Area yang muncul sesuai dengan Provinsi yang Anda pilih</small>
+                    @error('area')
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-
 
                 <div class="md:col-span-2 mb-3">
                     <label>Posisi yang dilamar</label>
                     <select id="posisi" class="input w-full" name="posisi">
                         <option value="">-- Pilih Posisi --</option>
-                        @foreach($jabatans as $jabatan)
-                        <option value="{{ $jabatan['nama_jabatan'] }}">
-                            {{ $jabatan['nama_jabatan'] }}
-                        </option>
-                        @endforeach
                     </select>
+                    <small>Posisi yang muncul sesuai dengan Area yang Anda pilih</small>
+                    @error('posisi')
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="md:col-span-2 mb-3">
                     <label for="address" class="label">Nama Lengkap *</label>
                     <input type="text" class="input w-full" name="nama_lengkap" id="nama_lengkap"
                         placeholder="Masukkan nama lengkap Anda" value="{{ Auth::user()->name }}">
+                    @error('nama_lengkap')
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
 
@@ -84,9 +91,7 @@
                         class="input w-full @error('tanggal_lahir') text-danger @enderror">
 
                     @error('tanggal_lahir')
-                    <p class="text-danger text-sm mt-1">
-                        {{ $message }}
-                    </p>
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
@@ -121,9 +126,7 @@
                     </select>
 
                     @error('status_perkawinan')
-                    <p class="text-danger text-sm mt-1">
-                        {{ $message }}
-                    </p>
+                    <small class="invalid-feedback text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
@@ -217,7 +220,7 @@
                     </div>
 
 
-                    {{-- nomor tanggal berlaku sim --}}
+                    {{-- tanggal berlaku sim --}}
                     <div class="md:col-span-2 mb-3">
                         <label for="tanggal_berlaku_sim" class="label">
                             Tanggal Berlaku SIM*

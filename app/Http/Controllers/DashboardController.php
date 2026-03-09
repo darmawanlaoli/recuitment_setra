@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Application;
+use App\Models\Applicants;
 use App\Models\RecruitmentQuestion;
 use App\Models\RecruitmentAnswer;
 use App\Services\Hrms\AreaService;
@@ -14,7 +14,11 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
 use App\Http\Requests\StoreApplicationRequest;
+use App\Models\Province;
+use App\Models\Regency;
+use App\Models\Area;
 use App\Services\ApplicationService;
+use Illuminate\Support\Facades\DB;
 
 
 class DashboardController extends Controller
@@ -30,9 +34,10 @@ class DashboardController extends Controller
         $jabatans = $jabatanService->all();
 
         // Ambil provinsi
-        $response = Http::get('https://api.datawilayah.com/api/provinsi.json');
-        $provinsi = $response->json()['data'] ?? [];
-        $applications = Application::where('id_user', Auth::id())->first();
+        // $response = Http::get('https://api.datawilayah.com/api/provinsi.json');
+        // $provinsi = $response->json()['data'] ?? [];
+        $provinsi = Province::get();
+        $applications = Applicants::where('id_user', Auth::id())->first();
 
         if ($applications && $applications->isProfileComplete()) {
             $is_profile_completed = true;
@@ -47,16 +52,38 @@ class DashboardController extends Controller
 
     public function profile()
     {
-        $applicants = Application::with(['province', 'regency'])->get();
-
-        return view('profile', compact('applicants'));
+        $applications = DB::table('applicants')
+            ->join('tb_provinces', 'applicants.provinsi', '=', 'tb_provinces.code')
+            ->join('tb_regencies', 'applicants.kabupaten', '=', 'tb_regencies.code')
+            ->join('tb_jabatan', 'applicants.posisi', '=', 'tb_jabatan.id')
+            ->join('tb_area', 'applicants.area', '=', 'tb_area.id')
+            ->select('applicants.*', 'tb_provinces.name as nama_provinsi', 'tb_regencies.name as nama_kabupaten', 'tb_jabatan.nama_jabatan', 'tb_area.nama_area')
+            ->get();
+            // dd($applications);
+        $sidebar = false;
+        return view('profile', compact('applications', 'sidebar'));
     }
 
-
-    public function kabupaten($provinsi)
+    public function regencies($provinsi)
     {
-        $response = Http::get("https://api.datawilayah.com/api/kabupaten_kota/{$provinsi}.json");
-        return response()->json($response->json());
+        $response = Regency::where('province_code', $provinsi)->get();
+        return response()->json(['data' => $response]);
+    }
+
+    public function area($provinsi)
+    {
+        $response = Area::where('province_code', $provinsi)->get();
+        return response()->json(['data' => $response]);
+    }
+
+    public function posisi($area_id)
+    {
+        $response = DB::table('tb_lowongan')
+            ->join('tb_jabatan', 'tb_lowongan.jabatan_id', '=', 'tb_jabatan.id')
+            ->select('tb_lowongan.*', 'tb_jabatan.nama_jabatan')
+            ->where('area_id', $area_id)
+            ->get();
+        return response()->json(['data' => $response]);
     }
 
     public function kecamatan($kabupaten)
@@ -80,7 +107,7 @@ class DashboardController extends Controller
         // ]);
 
         $user = $request->user();
-        $applications = Application::where('id_user', Auth::id())->first();
+        $applications = Applicants::where('id_user', Auth::id())->first();
 
         return view('dashboard', compact('user', 'applications'));
     }
@@ -130,6 +157,8 @@ class DashboardController extends Controller
             'kabupaten' => 'required',
             'area' => 'required',
             'posisi' => 'required',
+            'status_perkawinan' => 'required',
+            'tanggal_lahir' => 'required'
         ]);
 
         // Ambil kode wilayah dari request
@@ -137,20 +166,25 @@ class DashboardController extends Controller
         $kabupatenKode = $request->kabupaten;
 
         // Ambil daftar provinsi dan kabupaten dari API atau service
-        $provinsiList = Http::get('https://wilayah.id/api/provinces.json')->json()['data'] ?? [];
-        $kabupatenList = Http::get("https://wilayah.id/api/regencies/{$provinsiKode}.json")->json()['data'] ?? [];
+        // $provinsiList = Http::get('https://wilayah.id/api/provinces.json')->json()['data'] ?? [];
+        // $kabupatenList = Http::get("https://wilayah.id/api/regencies/{$provinsiKode}.json")->json()['data'] ?? [];
 
         // Cari nama berdasarkan kode
-        $provinsiNama = collect($provinsiList)->firstWhere('code', $provinsiKode)['name'] ?? null;
-        $kabupatenNama = collect($kabupatenList)->firstWhere('code', $kabupatenKode)['name'] ?? null;
+        // $provinsiNama = collect($provinsiList)->firstWhere('code', $provinsiKode)['name'] ?? null;
+        // $kabupatenNama = collect($kabupatenList)->firstWhere('code', $kabupatenKode)['name'] ?? null;
 
-        Application::create([
+        Applicants::create([
             'id_user' => Auth::id(),
-            'name' => $request->nama_lengkap,
-            'provinsi' => $provinsiNama,
-            'kabupaten' => $kabupatenNama,
+            'provinsi' => $request->provinsi,
+            'kabupaten' => $request->kabupaten,
             'area' => $request->area,
             'posisi' => $request->posisi,
+            'name' => $request->nama_lengkap,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'status_perkawinan' => $request->status_perkawinan,
+            'jenis_sim' => $request->jenis_sim,
+            'jenis_sim_sebelumnya' => $request->jenis_sim_sebelumnya,
+            'tanggal_berlaku_sim' => $request->tanggal_berlaku_sim,
             'status' => 'pending',
         ]);
 
@@ -159,7 +193,7 @@ class DashboardController extends Controller
 
     public function editProfile($id)
     {
-        $applications = Application::findOrFail($id);
+        $applications = Applicants::findOrFail($id);
         if ($applications && $applications->isProfileComplete()) {
             $is_profile_completed = true;
         } else {

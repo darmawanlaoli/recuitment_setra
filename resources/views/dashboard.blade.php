@@ -53,19 +53,19 @@ dd($applications->status);
 
 </script>
 
+{{-- kabupaten --}}
 <script>
     document.getElementById('provinsi').addEventListener('change', function(){
         let provinsi = this.value;
 
-
-        fetch(`/api/kabupaten/${provinsi}`)
+        fetch(`/get_regencies/${provinsi}`)
             .then(res => res.json())
             .then(data => {
                 let kab = document.getElementById('kabupaten');
                 kab.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
 
                 data.data.forEach(item => {
-                    kab.innerHTML += `<option value="${item.kode_wilayah}">${item.nama_wilayah}</option>`;
+                    kab.innerHTML += `<option value="${item.code}">${item.name}</option>`;
                 });
 
                 document.getElementById('kecamatan').innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
@@ -106,6 +106,64 @@ dd($applications->status);
     });
 </script>
 
+
+{{-- area --}}
+<script>
+    document.getElementById('provinsi').addEventListener('change', function(){
+        let provinsi = this.value;
+
+        fetch(`/get_area/${provinsi}`)
+            .then(res => res.json())
+            .then(data => {
+                let kab = document.getElementById('area');
+                kab.innerHTML = '<option value="">-- Pilih Area --</option>';
+
+                if (data.data.length === 0) {
+                    kab.innerHTML += '<option disabled value="">Tidak ada area tersedia pada Provinsi yang Anda pilih</option>';
+                } else {
+                    data.data.forEach(item => {
+                        kab.innerHTML += `<option value="${item.id}">${item.nama_area}</option>`;
+                    });
+                }
+            });
+    });
+
+</script>
+
+
+{{-- posisi --}}
+<script>
+    document.getElementById('area').addEventListener('change', function(){
+        let area = this.value;
+
+        fetch(`/get_posisi/${area}`)
+            .then(res => res.json())
+            .then(data => {
+                let pos = document.getElementById('posisi');
+
+                pos.innerHTML = '<option value="">-- Pilih Posisi --</option>';
+
+                if (data.data.length === 0) {
+
+                pos.innerHTML += '<option disabled>Tidak ada lowongan tersedia berdasarkan area yang Anda pilih</option>';
+
+                } else {
+
+                data.data.forEach(item => {
+
+                let option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.nama_jabatan;
+
+                pos.appendChild(option);
+
+                });
+
+                }
+            });
+    });
+
+</script>
 
 <script>
     document.getElementById('cv-upload').addEventListener('change', function () {

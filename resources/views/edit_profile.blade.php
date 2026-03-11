@@ -2161,7 +2161,7 @@
                 {{-- pengalaman kerja --}}
                 <div class="md:col-span-2">
                     <label for="pengalaman_kerja" class="label">
-                        Pengalaman Kerja *
+                        Pengalaman Kerja Terakhir*
                     </label>
 
                     <input type="text" name="pengalaman_kerja" id="pengalaman_kerja"
@@ -2259,6 +2259,63 @@
                     @endif
 
                 </div>
+
+                {{-- riwayat pekerjaan --}}
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered mb-5">
+                        <tr>
+                            <th class="bg-primary text-white" colspan="7">Riwayat Pekerjaan</th>
+                        </tr>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Perusahaan</th>
+                            <th>Posisi</th>
+                            <th>Tanggal Gabung</th>
+                            <th>Tanggal Akhir</th>
+                            <th>Paklaring</th>
+                            <th>No. Telp Perusahaan</th>
+                        </tr>
+
+                        @forelse ($riwayat_pekerjaan as $rp)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $rp->nama_perusahaan }}</td>
+                            <td>{{ $rp->posisi }}</td>
+                            <td>{{ $rp->tanggal_gabung }}</td>
+                            <td>{{ $rp->tanggal_akhir }}</td>
+                            <td><a href="{{ '/'.$rp->file_paklaring }}" class="badge bg-primary text-white">Download</a>
+                            </td>
+                            <td>{{ $rp->no_telepon_perusahaan }}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <a class="btn btn-primary"
+                                    href="{{ route('riwayat_pekerjaan.create', $applications->id) }}">+ Tambah Riwayat
+                                    Pekerjaan</a>
+                            </td>
+                        </tr>
+
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <p>Belum ada riwayat pekerjaan, click <a
+                                        href="{{ route('riwayat_pekerjaan.create', $applications->id) }}"
+                                        class="badge bg-primary text-white">disini</a>
+                                    untuk menambah
+                                    riwayat
+                                    pekerjaan</p>
+                            </td>
+                        </tr>
+
+                        @endforelse
+                    </table>
+
+                </div>
+
+                {{-- akhir riwayat pekerjaan --}}
 
                 {{-- alasan melamar --}}
                 <div class="md:col-span-2">

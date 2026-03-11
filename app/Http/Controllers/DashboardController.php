@@ -17,6 +17,7 @@ use App\Http\Requests\StoreApplicationRequest;
 use App\Models\Province;
 use App\Models\Regency;
 use App\Models\Area;
+use App\Models\EmploymentHistory;
 use App\Services\ApplicationService;
 use Illuminate\Support\Facades\DB;
 
@@ -48,6 +49,66 @@ class DashboardController extends Controller
         $sidebar = true;
 
         return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications', 'is_profile_completed', 'sidebar'));
+    }
+
+    public function createRiwayatPekerjaan($id_applicant){
+
+        $applicant = Applicants::where('id_user', Auth::id())->first();
+
+        if($applicant->id_user != Auth::id()) {
+            return back()->with('status', 'Terjadi kesalahan, silahkan coba lagi');
+        }else{
+            $applications = DB::table('applicants')
+                ->join('tb_provinces', 'applicants.provinsi', '=', 'tb_provinces.code')
+                ->join('tb_regencies', 'applicants.kabupaten', '=', 'tb_regencies.code')
+                ->join('tb_jabatan', 'applicants.posisi', '=', 'tb_jabatan.id')
+                ->join('tb_area', 'applicants.area', '=', 'tb_area.id')
+                ->select('applicants.*', 'tb_provinces.name as nama_provinsi', 'tb_regencies.name as nama_kabupaten', 'tb_jabatan.nama_jabatan', 'tb_area.nama_area')
+                ->get();
+                // dd($applications);
+            $sidebar = false;
+
+            return view('create_riwayat_pekerjaan', compact('applications', 'sidebar', 'id_applicant'));
+        }
+    }
+
+    public function storeRiwayatPekerjaan(Request $request)
+    {
+        $request->validate([
+            'nama_perusahaan' => 'required',
+            'posisi' => 'required',
+            'tanggal_gabung' => 'required',
+            'tanggal_akhir' => 'required',
+            'file_paklaring' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        ]);
+
+        $pathPaklaring = null;
+
+        if ($request->hasFile('file_paklaring')) {
+
+            $file = $request->file('file_paklaring');
+
+            // buat nama file unik
+            $filename = time().'_'.$file->getClientOriginalName();
+
+            // simpan ke folder public/paklaring
+            $file->move(public_path('file_paklaring'), $filename);
+
+            // path yang disimpan di database
+            $pathPaklaring = 'file_paklaring/'.$filename;
+        }
+
+        EmploymentHistory::create([
+            'id_applicant' => $request->id_applicant,
+            'nama_perusahaan' => $request->nama_perusahaan,
+            'posisi' => $request->posisi,
+            'tanggal_gabung' => $request->tanggal_gabung,
+            'tanggal_akhir' => $request->tanggal_akhir,
+            'no_telepon_perusahaan' => $request->no_telepon_perusahaan,
+            'file_paklaring' => $pathPaklaring,
+        ]);
+
+        return back()->with('status', 'Riwayat pekerjaan berhasil tersimpan');
     }
 
     public function profile()
@@ -101,11 +162,6 @@ class DashboardController extends Controller
 
     public function edit(Request $request): View
     {
-        // return view('dashboard', [
-        //     'user' => $request->user(),
-        //     'applications' => Application::where('id_user', Auth::id())->first()
-        // ]);
-
         $user = $request->user();
         $applications = Applicants::where('id_user', Auth::id())->first();
 
@@ -165,14 +221,6 @@ class DashboardController extends Controller
         $provinsiKode = $request->provinsi;
         $kabupatenKode = $request->kabupaten;
 
-        // Ambil daftar provinsi dan kabupaten dari API atau service
-        // $provinsiList = Http::get('https://wilayah.id/api/provinces.json')->json()['data'] ?? [];
-        // $kabupatenList = Http::get("https://wilayah.id/api/regencies/{$provinsiKode}.json")->json()['data'] ?? [];
-
-        // Cari nama berdasarkan kode
-        // $provinsiNama = collect($provinsiList)->firstWhere('code', $provinsiKode)['name'] ?? null;
-        // $kabupatenNama = collect($kabupatenList)->firstWhere('code', $kabupatenKode)['name'] ?? null;
-
         Applicants::create([
             'id_user' => Auth::id(),
             'provinsi' => $request->provinsi,
@@ -200,8 +248,10 @@ class DashboardController extends Controller
             $is_profile_completed = false;
         }
 
+        $riwayat_pekerjaan = EmploymentHistory::where('id_applicant', $id)->get();
+
         $sidebar = true;
-        return view('edit_profile', compact('applications', 'sidebar', 'is_profile_completed'));
+        return view('edit_profile', compact('applications', 'sidebar', 'is_profile_completed', 'riwayat_pekerjaan'));
     }
 
     public function updateProfile(

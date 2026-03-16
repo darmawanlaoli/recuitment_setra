@@ -54,7 +54,7 @@
                     <select id="area" class="input w-full" name="area">
                         <option value="">-- Area --</option>
                     </select>
-                    <small>Area yang muncul sesuai dengan Provinsi yang Anda pilih</small>
+                    <small>Area yang muncul sesuai dengan Kabupaten/Kota yang Anda pilih</small>
                     @error('area')
                     <small class="invalid-feedback text-danger">{{ $message }}</small>
                     @enderror
@@ -223,7 +223,7 @@
                     {{-- tanggal berlaku sim --}}
                     <div class="md:col-span-2 mb-3">
                         <label for="tanggal_berlaku_sim" class="label">
-                            Tanggal Berlaku SIM*
+                            Tanggal Berlaku SIM *
                         </label>
 
                         <input type="date" name="tanggal_berlaku_sim" id="tanggal_berlaku_sim"
@@ -236,6 +236,8 @@
                             {{ $message }}
                         </p>
                         @enderror
+
+                        <span style="display: none">Umur SIM Anda</span>
                     </div>
 
                     {{-- status berlaku SIM --}}
@@ -253,8 +255,7 @@
                     {{-- jenis sim sebelumnya --}}
                     <div class="md:col-span-2 mb-3">
                         <label for="jenis_sim_sebelumnya" class="label">
-                            Jenis SIM Sebelumnya
-                            *
+                            Jenis SIM Sebelumnya *
                         </label>
 
                         <select name="jenis_sim_sebelumnya" id="jenis_sim_sebelumnya"
@@ -263,75 +264,65 @@
                             <option value="">-- Pilih Jenis SIM Sebelumnya --</option>
 
                             <option value="Tidak Memiliki SIM" {{ old('jenis_sim_sebelumnya', $applicant->
-                                jenis_sim_sebelumnya ?? '')
-                                ==
-                                'Tidak Memiliki SIM' ?
-                                'selected' :
-                                '' }}>
+                                jenis_sim_sebelumnya ?? '') ==
+                                'Tidak Memiliki SIM' ? 'selected' : '' }}>
                                 Tidak Memiliki SIM
                             </option>
 
-
                             <option value="SIM A" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
-                                ==
-                                'SIM A' ?
-                                'selected' :
-                                '' }}>
+                                == 'SIM A' ?
+                                'selected' : '' }}>
                                 SIM A
                             </option>
 
                             <option value="SIM B1" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ??
-                                '')
-                                ==
-                                'SIM B1' ?
-                                'selected' :
-                                '' }}>
+                                '') == 'SIM B1' ?
+                                'selected' : '' }}>
                                 SIM B1
                             </option>
 
                             <option value="SIM B1 Umum" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya
-                                ??
-                                '')
-                                ==
-                                'SIM B1 Umum' ?
-                                'selected' :
-                                '' }}>
+                                ?? '') == 'SIM B1
+                                Umum' ? 'selected' : '' }}>
                                 SIM B1 Umum
                             </option>
 
                             <option value="SIM B2" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ??
-                                '')
-                                ==
-                                'SIM B2' ?
-                                'selected' :
-                                '' }}>
+                                '') == 'SIM B2' ?
+                                'selected' : '' }}>
                                 SIM B2
                             </option>
 
                             <option value="SIM B2 Umum" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya
-                                ??
-                                '')
-                                ==
-                                'SIM B2 Umum' ?
-                                'selected' :
-                                '' }}>
+                                ?? '') == 'SIM B2
+                                Umum' ? 'selected' : '' }}>
                                 SIM B2 Umum
                             </option>
 
                             <option value="SIM C" {{ old('jenis_sim_sebelumnya', $applicant->jenis_sim_sebelumnya ?? '')
-                                ==
-                                'SIM C' ?
-                                'selected' :
-                                '' }}>
+                                == 'SIM C' ?
+                                'selected' : '' }}>
                                 SIM C
                             </option>
 
                         </select>
 
                         @error('jenis_sim_sebelumnya')
-                        <p class="text-danger text-sm mt-1">
-                            {{ $message }}
-                        </p>
+                        <p class="text-danger text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- upload foto sim --}}
+                    <div id="upload_sim_container" class="md:col-span-2 mb-3 hidden">
+                        <label for="foto_sim_sebelumnya" class="label">
+                            Upload Foto SIM Sebelumnya
+                        </label>
+
+                        <input type="file" name="file_sim_lama" id="foto_sim_sebelumnya" accept="image/*"
+                            class="input w-full">
+
+                        @error('file_sim_lama')
+                        <p class="text-danger text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -352,7 +343,7 @@
     </form>
 </div>
 
-
+{{-- status usia --}}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -396,12 +387,12 @@
 
         if (lulus) {
             statusUsiaInput.value = "LULUS";
-            statusUsiaInput.classList.remove("text-red-600");
-            statusUsiaInput.classList.add("text-green-600");
+            statusUsiaInput.classList.remove("text-danger");
+            statusUsiaInput.classList.add("text-primary");
         } else {
             statusUsiaInput.value = "TIDAK LULUS";
-            statusUsiaInput.classList.remove("text-green-600");
-            statusUsiaInput.classList.add("text-red-600");
+            statusUsiaInput.classList.remove("text-primary");
+            statusUsiaInput.classList.add("text-danger");
         }
     }
 
@@ -430,33 +421,37 @@
         }
 
         const tanggalBerlaku = new Date(tanggalValue);
+
+        // Hitung tanggal terbit SIM (5 tahun sebelum tanggal berlaku)
+        const tanggalTerbit = new Date(tanggalBerlaku);
+        tanggalTerbit.setFullYear(tanggalTerbit.getFullYear() - 5);
+
         const today = new Date();
 
-        // Tambah 1 tahun dari hari ini
+        // Batas minimal: SIM harus sudah berumur 1 tahun
         const batas = new Date();
-        batas.setFullYear(today.getFullYear() + 1);
+        batas.setFullYear(today.getFullYear() - 1);
 
-        if (tanggalBerlaku > batas) {
-            statusInput.value = "LULUS";
-            statusInput.classList.remove("text-red-600");
-            statusInput.classList.add("text-green-600");
-        } else {
+        if (tanggalTerbit > batas) {
             statusInput.value = "TIDAK LULUS";
-            statusInput.classList.remove("text-green-600");
-            statusInput.classList.add("text-red-600");
+            statusInput.classList.remove("text-primary");
+            statusInput.classList.add("text-primary");
+        } else {
+            statusInput.value = "LULUS";
+            statusInput.classList.remove("text-primary");
+            statusInput.classList.add("text-primary");
         }
     }
 
     // Trigger saat tanggal berubah
     tanggalInput.addEventListener("change", hitungStatus);
 
-    // Jika edit data lama (pre-filled value)
+    // Untuk data yang sudah terisi (edit form)
     hitungStatus();
 });
 </script>
 
 {{-- conditional untuk SIM berdasarkan posisi yang dilamar --}}
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -483,5 +478,32 @@
 
     // Jika edit data lama
     toggleSimSection();
+});
+</script>
+
+
+
+{{-- conditional untuk upload SIM sebelumnya --}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+
+    const simSelect = document.getElementById("jenis_sim_sebelumnya");
+    const uploadContainer = document.getElementById("upload_sim_container");
+
+    function toggleUpload() {
+        const value = simSelect.value;
+
+        if(value && value !== "Tidak Memiliki SIM"){
+            uploadContainer.classList.remove("hidden");
+        }else{
+            uploadContainer.classList.add("hidden");
+        }
+    }
+
+    simSelect.addEventListener("change", toggleUpload);
+
+    // jalankan saat halaman load (untuk old value / edit form)
+    toggleUpload();
 });
 </script>

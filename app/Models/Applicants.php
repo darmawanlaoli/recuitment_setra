@@ -34,6 +34,7 @@ class Applicants extends Model
         'file_sim',
         'jenis_sim',
         'jenis_sim_sebelumnya',
+        'file_sim_lama',
         'tanggal_berlaku_sim',
         'nomor_npwp',
         'file_npwp',

@@ -107,34 +107,46 @@ dd($applications->status);
 </script>
 
 
-{{-- area --}}
 <script>
-    document.getElementById('provinsi').addEventListener('change', function(){
-        let provinsi = this.value;
+    document.getElementById('kabupaten').addEventListener('change', function(){
 
-        fetch(`/get_area/${provinsi}`)
-            .then(res => res.json())
-            .then(data => {
-                let kab = document.getElementById('area');
-                kab.innerHTML = '<option value="">-- Pilih Area --</option>';
+    let kabupaten = this.value;
+    let areaSelect = document.getElementById('area');
 
-                if (data.data.length === 0) {
-                    kab.innerHTML += '<option disabled value="">Tidak ada area tersedia pada Provinsi yang Anda pilih</option>';
-                } else {
-                    data.data.forEach(item => {
-                        kab.innerHTML += `<option value="${item.id}">${item.nama_area}</option>`;
-                    });
-                }
-            });
-    });
+    // tampilkan loading
+    areaSelect.innerHTML = '<option value="">Mohon tunggu... sedang mengambil data area</option>';
 
+    fetch(`/get_area/${kabupaten}`)
+        .then(res => res.json())
+        .then(data => {
+
+            areaSelect.innerHTML = '<option value="">-- Pilih Area --</option>';
+
+            if (data.data.length === 0) {
+                areaSelect.innerHTML += '<option disabled>Tidak ada area tersedia pada Kabupaten/Kota yang Anda pilih</option>';
+            } else {
+                data.data.forEach(item => {
+                    areaSelect.innerHTML += `<option value="${item.id}">${item.nama_area}</option>`;
+                });
+            }
+        })
+        .catch(error => {
+            areaSelect.innerHTML = '<option value="">Gagal mengambil data, silahkan refresh halaman ini</option>';
+            console.error(error);
+        });
+
+});
 </script>
 
 
-{{-- posisi --}}
+{{-- posisi / lowongan --}}
 <script>
     document.getElementById('area').addEventListener('change', function(){
         let area = this.value;
+        let posisiSelect = document.getElementById('posisi');
+
+        // tampilkan loading
+        posisiSelect.innerHTML = '<option value="">Mohon tunggu... sedang mengambil data posisi</option>';
 
         fetch(`/get_posisi/${area}`)
             .then(res => res.json())

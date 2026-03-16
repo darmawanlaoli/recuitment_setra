@@ -2391,7 +2391,7 @@ bindFilePreview('file_paklaring', 'file_paklaring_filename');
 
 </script>
 
-<script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function () {
 
     const tanggalInput = document.getElementById("tanggal_berlaku_sim");
@@ -2429,6 +2429,6 @@ bindFilePreview('file_paklaring', 'file_paklaring_filename');
     // Jika edit data lama (pre-filled value)
     hitungStatus();
 });
-</script>
+</script> --}}
 
 @endsection

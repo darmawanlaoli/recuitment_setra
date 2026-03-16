@@ -39,7 +39,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/get_regencies/{id}', [DashboardController::class, 'regencies'])->name('get_regencies');
-    Route::get('/get_area/{id}', [DashboardController::class, 'area'])->name('get_area');
+    Route::get('/get_area/{id}', [DashboardController::class, 'getArea'])->name('get_area');
     Route::get('/get_posisi/{id}', [DashboardController::class, 'posisi'])->name('get_posisi');
 
 

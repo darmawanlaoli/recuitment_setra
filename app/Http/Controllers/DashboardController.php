@@ -131,9 +131,9 @@ class DashboardController extends Controller
         return response()->json(['data' => $response]);
     }
 
-    public function area($provinsi)
+    public function getArea($kabupaten)
     {
-        $response = Area::where('province_code', $provinsi)->get();
+        $response = Area::where('regency_code', $kabupaten)->get();
         return response()->json(['data' => $response]);
     }
 
@@ -206,38 +206,45 @@ class DashboardController extends Controller
     }
 
     public function storeLamaran(Request $request)
-    {
+{
+    $validated = $request->validate([
+        'provinsi' => 'required',
+        'kabupaten' => 'required',
+        'area' => 'required',
+        'posisi' => 'required',
+        'status_perkawinan' => 'required',
+        'tanggal_lahir' => 'required|date',
+        'file_sim_lama' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-        $request->validate([
-            'provinsi' => 'required',
-            'kabupaten' => 'required',
-            'area' => 'required',
-            'posisi' => 'required',
-            'status_perkawinan' => 'required',
-            'tanggal_lahir' => 'required'
-        ]);
+    $fileSimPath = null;
 
-        // Ambil kode wilayah dari request
-        $provinsiKode = $request->provinsi;
-        $kabupatenKode = $request->kabupaten;
-
-        Applicants::create([
-            'id_user' => Auth::id(),
-            'provinsi' => $request->provinsi,
-            'kabupaten' => $request->kabupaten,
-            'area' => $request->area,
-            'posisi' => $request->posisi,
-            'name' => $request->nama_lengkap,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'status_perkawinan' => $request->status_perkawinan,
-            'jenis_sim' => $request->jenis_sim,
-            'jenis_sim_sebelumnya' => $request->jenis_sim_sebelumnya,
-            'tanggal_berlaku_sim' => $request->tanggal_berlaku_sim,
-            'status' => 'pending',
-        ]);
-
-        return Redirect::route('dashboard')->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
+    if ($request->hasFile('file_sim_lama')) {
+        $fileSimPath = $request->file('file_sim_lama')->store(
+            'applications/file_sim_lama/',
+            'public'
+        );
     }
+
+    Applicants::create([
+        'id_user' => Auth::id(),
+        'provinsi' => $validated['provinsi'],
+        'kabupaten' => $validated['kabupaten'],
+        'area' => $validated['area'],
+        'posisi' => $validated['posisi'],
+        'name' => $request->nama_lengkap,
+        'tanggal_lahir' => $validated['tanggal_lahir'],
+        'status_perkawinan' => $validated['status_perkawinan'],
+        'jenis_sim' => $request->jenis_sim,
+        'jenis_sim_sebelumnya' => $request->jenis_sim_sebelumnya,
+        'tanggal_berlaku_sim' => $request->tanggal_berlaku_sim,
+        'file_sim_lama' => $fileSimPath,
+        'status' => 'pending',
+    ]);
+
+    return Redirect::route('dashboard')
+        ->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
+}
 
     public function editProfile($id)
     {

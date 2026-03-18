@@ -236,19 +236,27 @@
                             {{ $message }}
                         </p>
                         @enderror
+                    </div>
 
-                        <span style="display: none">Umur SIM Anda</span>
+                    {{-- usia sim --}}
+                    <div class="md:col-span-2 mb-3">
+                        <label for="usia_sim" class="label">
+                            Usia SIM (terisi otomatis)
+                        </label>
+
+                        <input type="text" readonly name="usia_sim" id="usia_sim" class="input w-full bg-gray-100"
+                            readonly>
                     </div>
 
                     {{-- status berlaku SIM --}}
                     <div class="md:col-span-2 mb-3">
                         <label for="status_berlaku_sim" class="label">
-                            Status Masa Berlaku SIM*
+                            Status Masa Berlaku SIM (terisi otomatis)
                         </label>
 
                         <input type="text" name="status_berlaku_sim" id="status_berlaku_sim"
                             class="input w-full bg-gray-100" readonly>
-                        <small>Akan otomatis <b>"TIDAK LULUS"</b> apabila umur SIM kurang dari 1
+                        <small>Akan otomatis <b>"TIDAK LULUS"</b> apabila usia SIM kurang dari 1
                             tahun.</small>
                     </div>
 
@@ -409,8 +417,11 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
+    const jenisSim = document.getElementById("jenis_sim");
     const tanggalInput = document.getElementById("tanggal_berlaku_sim");
     const statusInput  = document.getElementById("status_berlaku_sim");
+
+
 
     function hitungStatus() {
         const tanggalValue = tanggalInput.value;
@@ -432,10 +443,18 @@
         const batas = new Date();
         batas.setFullYear(today.getFullYear() - 1);
 
+
+
         if (tanggalTerbit > batas) {
-            statusInput.value = "TIDAK LULUS";
-            statusInput.classList.remove("text-primary");
-            statusInput.classList.add("text-primary");
+            if(jenisSim.value == 'SIM B1') {
+                statusInput.value = "LULUS";
+                statusInput.classList.remove("text-danger");
+                statusInput.classList.add("text-primary");
+            }else {
+                statusInput.value = "TIDAK LULUS";
+                statusInput.classList.remove("text-primary");
+                statusInput.classList.add("text-danger");
+            }
         } else {
             statusInput.value = "LULUS";
             statusInput.classList.remove("text-primary");
@@ -445,6 +464,7 @@
 
     // Trigger saat tanggal berubah
     tanggalInput.addEventListener("change", hitungStatus);
+    jenisSim.addEventListener("change", hitungStatus);
 
     // Untuk data yang sudah terisi (edit form)
     hitungStatus();
@@ -505,5 +525,63 @@
 
     // jalankan saat halaman load (untuk old value / edit form)
     toggleUpload();
+});
+</script>
+
+{{-- hitung usia SIM --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const tanggalInput = document.getElementById("tanggal_berlaku_sim");
+    const usiaInput    = document.getElementById("usia_sim");
+
+    function hitungUsiaSim() {
+        const tanggalValue = tanggalInput.value;
+
+        if (!tanggalValue) {
+            usiaInput.value = "";
+            return;
+        }
+
+        const tanggalBerlaku = new Date(tanggalValue);
+
+        if (isNaN(tanggalBerlaku)) {
+            usiaInput.value = "";
+            return;
+        }
+
+        // 1. Hitung tanggal terbit (5 tahun sebelumnya)
+        const tanggalTerbit = new Date(tanggalBerlaku);
+        tanggalTerbit.setFullYear(tanggalTerbit.getFullYear() - 5);
+
+        const today = new Date();
+
+        // 2. Hitung selisih tahun, bulan, hari
+        let tahun = today.getFullYear() - tanggalTerbit.getFullYear();
+        let bulan = today.getMonth() - tanggalTerbit.getMonth();
+        let hari  = today.getDate() - tanggalTerbit.getDate();
+
+        // Penyesuaian jika hari negatif
+        if (hari < 0) {
+            bulan--;
+            const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+            hari += lastMonth.getDate();
+        }
+
+        // Penyesuaian jika bulan negatif
+        if (bulan < 0) {
+            tahun--;
+            bulan += 12;
+        }
+
+        // 3. Tampilkan hasil
+        usiaInput.value = `${tahun} tahun ${bulan} bulan`;
+    }
+
+    // Trigger saat input berubah
+    tanggalInput.addEventListener("change", hitungUsiaSim);
+
+    // Untuk edit data (auto hitung saat load)
+    hitungUsiaSim();
 });
 </script>

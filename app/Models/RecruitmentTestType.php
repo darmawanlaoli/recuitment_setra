@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Applicants extends Model
+class RecruitmentTestType extends Model
 {
     protected $fillable = [
         'id_user',

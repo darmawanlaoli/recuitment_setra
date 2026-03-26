@@ -54,6 +54,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/answer_question/{id}', [DashboardController::class, 'answerQuestion'])->name('answer_question');
     Route::post('/store_answer/{id}', [DashboardController::class, 'storeAnswer'])->name('store_answer');
 
+    Route::get('/test/{id}', [DashboardController::class, 'test'])->name('test');
+    Route::post('/store_test/{id}', [DashboardController::class, 'storeTest'])->name('storeTest');
+
     Route::post('/lamaran/store', [DashboardController::class, 'storeLamaran'])->name('lamaran.store');
     Route::get('/riwayat_pekerjaan/create/{id}', [DashboardController::class, 'createRiwayatPekerjaan'])->name('riwayat_pekerjaan.create');
     Route::post('/riwayat_pekerjaan/store', [DashboardController::class, 'storeRiwayatPekerjaan'])->name('riwayat_pekerjaan.store');

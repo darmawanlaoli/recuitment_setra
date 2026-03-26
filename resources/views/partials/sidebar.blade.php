@@ -112,7 +112,7 @@
                     <span class="text-lg font-bold text-white font-heading">✓</span>
                 </div>
 
-                <div onclick="alertMessage('Test belum tersedia, silahkan cek secara berkala')"
+                <div onclick="document.location.href='{{ route('test',$applications->id) }}'"
                     class="flex items-center justify-between mb-4 p-3 bg-disable rounded-lg cursor-pointer">
                     <span class="text-sm text-secondary">Mengerjakan Test</span>
                     <span class="text-lg font-bold text-danger font-heading">X</span>

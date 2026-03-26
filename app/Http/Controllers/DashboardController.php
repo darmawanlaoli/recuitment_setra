@@ -18,6 +18,7 @@ use App\Models\Province;
 use App\Models\Regency;
 use App\Models\Area;
 use App\Models\EmploymentHistory;
+use App\Models\RecruitmentTestType;
 use App\Services\ApplicationService;
 use Illuminate\Support\Facades\DB;
 
@@ -184,9 +185,19 @@ class DashboardController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
+    public function test(Request $request)
+    {
+        $user = $request->user();
+        $applications = Applicants::where('id_user', Auth::id())->first();
+        $test_types = RecruitmentTestType::where('is_active', 1)->get();
+        $sidebar = false;
+        if($applications->is_test_active == 0) {
+            return back()->with('success', 'Test masih belum diaktifkan, silahkan cek secara berkala');
+        }else{
+            return view('test', compact('sidebar', 'test_types', 'applications'));
+        }
+    }
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -206,45 +217,45 @@ class DashboardController extends Controller
     }
 
     public function storeLamaran(Request $request)
-{
-    $validated = $request->validate([
-        'provinsi' => 'required',
-        'kabupaten' => 'required',
-        'area' => 'required',
-        'posisi' => 'required',
-        'status_perkawinan' => 'required',
-        'tanggal_lahir' => 'required|date',
-        'file_sim_lama' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-    ]);
+    {
+        $validated = $request->validate([
+            'provinsi' => 'required',
+            'kabupaten' => 'required',
+            'area' => 'required',
+            'posisi' => 'required',
+            'status_perkawinan' => 'required',
+            'tanggal_lahir' => 'required|date',
+            'file_sim_lama' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
 
-    $fileSimPath = null;
+        $fileSimPath = null;
 
-    if ($request->hasFile('file_sim_lama')) {
-        $fileSimPath = $request->file('file_sim_lama')->store(
-            'applications/file_sim_lama/',
-            'public'
-        );
+        if ($request->hasFile('file_sim_lama')) {
+            $fileSimPath = $request->file('file_sim_lama')->store(
+                'applications/file_sim_lama/',
+                'public'
+            );
+        }
+
+        Applicants::create([
+            'id_user' => Auth::id(),
+            'provinsi' => $validated['provinsi'],
+            'kabupaten' => $validated['kabupaten'],
+            'area' => $validated['area'],
+            'posisi' => $validated['posisi'],
+            'name' => $request->nama_lengkap,
+            'tanggal_lahir' => $validated['tanggal_lahir'],
+            'status_perkawinan' => $validated['status_perkawinan'],
+            'jenis_sim' => $request->jenis_sim,
+            'jenis_sim_sebelumnya' => $request->jenis_sim_sebelumnya,
+            'tanggal_berlaku_sim' => $request->tanggal_berlaku_sim,
+            'file_sim_lama' => $fileSimPath,
+            'status' => 'pending',
+        ]);
+
+        return Redirect::route('dashboard')
+            ->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
     }
-
-    Applicants::create([
-        'id_user' => Auth::id(),
-        'provinsi' => $validated['provinsi'],
-        'kabupaten' => $validated['kabupaten'],
-        'area' => $validated['area'],
-        'posisi' => $validated['posisi'],
-        'name' => $request->nama_lengkap,
-        'tanggal_lahir' => $validated['tanggal_lahir'],
-        'status_perkawinan' => $validated['status_perkawinan'],
-        'jenis_sim' => $request->jenis_sim,
-        'jenis_sim_sebelumnya' => $request->jenis_sim_sebelumnya,
-        'tanggal_berlaku_sim' => $request->tanggal_berlaku_sim,
-        'file_sim_lama' => $fileSimPath,
-        'status' => 'pending',
-    ]);
-
-    return Redirect::route('dashboard')
-        ->with('success', 'Lamaran berhasil diajukan, silahkan cek status pengajuan Anda secara berkala!');
-}
 
     public function editProfile($id)
     {

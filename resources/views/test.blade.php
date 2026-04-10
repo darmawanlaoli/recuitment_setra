@@ -23,7 +23,7 @@
                 <td>{{ $test_type->description }}</td>
                 <td>{{ $test_type->duration_minutes .' menit' }}</td>
                 <td>
-                    <a href="" onclick="alert('Fitur ini masih dalam pengerjaan')" class="btn btn-primary">Mulai</a>
+                    <a href="{{ route('start_test', $test_type->id) }}" class="btn btn-primary">Mulai</a>
                 </td>
             </tr>
 

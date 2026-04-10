@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RecruitmentQuestion extends Model
+class RecruitmentTestQuestion extends Model
 {
     protected $fillable = [
         'question_text',
@@ -16,6 +16,11 @@ class RecruitmentQuestion extends Model
 
     public function answers()
     {
-        return $this->hasMany(RecruitmentAnswer::class, 'question_id');
+        return $this->hasMany(RecruitmentTestAnswer::class, 'question_id');
+    }
+
+    public function options()
+    {
+        return $this->hasMany(RecruitmentTestOption::class, 'question_id');
     }
 }

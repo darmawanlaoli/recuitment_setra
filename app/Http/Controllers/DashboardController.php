@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Applicants;
 use App\Models\RecruitmentQuestion;
-use App\Models\RecruitmentAnswer;
+use App\Models\RecruitmentTestAnswer;
+use App\Models\RecruitmentTestSession;
+use App\Models\RecruitmentTestQuestion;
+use App\Models\RecruitmentTestOption;
 use App\Services\Hrms\AreaService;
 use App\Services\Hrms\JabatanService;
 use App\Http\Requests\ProfileUpdateRequest;
@@ -29,8 +33,7 @@ class DashboardController extends Controller
     public function index(
         AreaService $areaService,
         JabatanService $jabatanService,
-    )
-    {
+    ) {
 
         $areas = $areaService->all();
         $jabatans = $jabatanService->all();
@@ -52,13 +55,14 @@ class DashboardController extends Controller
         return view('dashboard', compact('provinsi', 'areas', 'jabatans', 'applications', 'is_profile_completed', 'sidebar'));
     }
 
-    public function createRiwayatPekerjaan($id_applicant){
+    public function createRiwayatPekerjaan($id_applicant)
+    {
 
         $applicant = Applicants::where('id_user', Auth::id())->first();
 
-        if($applicant->id_user != Auth::id()) {
+        if ($applicant->id_user != Auth::id()) {
             return back()->with('status', 'Terjadi kesalahan, silahkan coba lagi');
-        }else{
+        } else {
             $applications = DB::table('applicants')
                 ->join('tb_provinces', 'applicants.provinsi', '=', 'tb_provinces.code')
                 ->join('tb_regencies', 'applicants.kabupaten', '=', 'tb_regencies.code')
@@ -66,7 +70,7 @@ class DashboardController extends Controller
                 ->join('tb_area', 'applicants.area', '=', 'tb_area.id')
                 ->select('applicants.*', 'tb_provinces.name as nama_provinsi', 'tb_regencies.name as nama_kabupaten', 'tb_jabatan.nama_jabatan', 'tb_area.nama_area')
                 ->get();
-                // dd($applications);
+            // dd($applications);
             $sidebar = false;
 
             return view('create_riwayat_pekerjaan', compact('applications', 'sidebar', 'id_applicant'));
@@ -90,13 +94,13 @@ class DashboardController extends Controller
             $file = $request->file('file_paklaring');
 
             // buat nama file unik
-            $filename = time().'_'.$file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
 
             // simpan ke folder public/paklaring
             $file->move(public_path('file_paklaring'), $filename);
 
             // path yang disimpan di database
-            $pathPaklaring = 'file_paklaring/'.$filename;
+            $pathPaklaring = 'file_paklaring/' . $filename;
         }
 
         EmploymentHistory::create([
@@ -121,7 +125,7 @@ class DashboardController extends Controller
             ->join('tb_area', 'applicants.area', '=', 'tb_area.id')
             ->select('applicants.*', 'tb_provinces.name as nama_provinsi', 'tb_regencies.name as nama_kabupaten', 'tb_jabatan.nama_jabatan', 'tb_area.nama_area')
             ->get();
-            // dd($applications);
+        // dd($applications);
         $sidebar = false;
         return view('profile', compact('applications', 'sidebar'));
     }
@@ -185,17 +189,131 @@ class DashboardController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    public function test(Request $request)
+    public function startTest()
     {
-        $user = $request->user();
-        $applications = Applicants::where('id_user', Auth::id())->first();
-        $test_types = RecruitmentTestType::where('is_active', 1)->get();
-        $sidebar = false;
-        if($applications->is_test_active == 0) {
-            return back()->with('success', 'Test masih belum diaktifkan, silahkan cek secara berkala');
-        }else{
-            return view('test', compact('sidebar', 'test_types', 'applications'));
+        $applicantId = Applicants::where('id_user', Auth::id())->first()->id;
+
+        // Ambil semua test aktif berurutan
+        $testTypes = \App\Models\RecruitmentTestType::where('is_active', 1)
+            ->orderBy('sequence')
+            ->get();
+
+        foreach ($testTypes as $test) {
+
+            $session = \App\Models\RecruitmentTestSession::where([
+                'applicant_id' => $applicantId,
+                'test_type_id' => $test->id
+            ])->first();
+
+            // Jika belum pernah → buat session
+            if (!$session) {
+
+                $session = \App\Models\RecruitmentTestSession::create([
+                    'applicant_id' => $applicantId,
+                    'test_type_id' => $test->id,
+                    'start_time'   => now(),
+                    'status'       => 'in_progress'
+                ]);
+
+                return redirect()->route('test.show', $session->id);
+            }
+
+            // Jika sedang dikerjakan → lanjutkan
+            if ($session->status === 'in_progress') {
+                return redirect()->route('test.show', $session->id);
+            }
+
+            // Jika sudah selesai → lanjut ke test berikutnya
         }
+
+        return view('test.finished');
+    }
+
+    public function showTest($sessionId)
+    {
+        $session = \App\Models\RecruitmentTestSession::findOrFail($sessionId);
+
+        $applicantId = Applicants::where('id_user', Auth::id())->first()->id;
+
+        // 🔒 Pastikan session milik dia
+        if ($session->applicant_id != $applicantId) {
+            abort(403);
+        }
+
+        // 🔒 Jika sudah selesai → tidak boleh buka lagi
+        if ($session->status === 'finished') {
+            return redirect()->route('test.start')
+                ->with('error', 'Test sudah selesai');
+        }
+
+        $questions = \App\Models\RecruitmentTestQuestion::with('options')
+            ->where('test_type_id', $session->test_type_id)
+            ->orderBy('order_number')
+            ->get();
+
+        $sidebar = false;
+
+        return view('test.exam', compact('session', 'questions', 'sidebar'));
+    }
+
+    public function submitTest(Request $request, $sessionId)
+    {
+        $session = RecruitmentTestSession::findOrFail($sessionId);
+
+        if ($session->status === 'finished') {
+            return redirect()->route('test.start');
+        }
+
+        $totalScore = 0;
+
+        foreach ($request->answers as $questionId => $answer) {
+
+            $question = RecruitmentTestQuestion::find($questionId);
+
+            $score = 0;
+            $selectedOptionId = null;
+            $answerText = null;
+
+            if ($question->question_type === 'mcq') {
+
+                $option = RecruitmentTestOption::find($answer);
+
+                if ($option && $option->is_correct) {
+                    $score = $question->weight;
+                }
+
+                $selectedOptionId = $option->id ?? null;
+            } else {
+                $answerText = $answer;
+            }
+
+            RecruitmentTestAnswer::create([
+                'session_id' => $session->id,
+                'question_id' => $questionId,
+                'selected_option_id' => $selectedOptionId,
+                'answer_text' => $answerText,
+                'score' => $score
+            ]);
+
+            $totalScore += $score;
+        }
+
+        // 🔥 Ambil passing grade
+        $testType = RecruitmentTestType::find($session->test_type_id);
+
+        $status = ($totalScore >= $testType->passing_grade)
+            ? 'passed'
+            : 'failed';
+
+        $session->update([
+            'end_time' => now(),
+            'status' => 'finished',
+            'total_score' => $totalScore,
+            'result_status' => $status
+        ]);
+
+        return redirect()->route('test.start')
+            ->with('success', 'Test selesai');
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -218,6 +336,14 @@ class DashboardController extends Controller
 
     public function storeLamaran(Request $request)
     {
+        if ($request->status_usia === 'TIDAK LULUS') {
+            return back()->with('error', 'Maaf, Anda tidak memenuhi syarat usia untuk melamar. Usia minimal adalah 18 tahun dan maksimal 51 tahun.');
+        }
+
+        if ($request->status_berlaku_sim === 'TIDAK LULUS') {
+            return back()->with('error', 'Maaf, usia SIM Anda tidak memenuhi syarat (kurang dari 1 tahun).');
+        }
+
         $validated = $request->validate([
             'provinsi' => 'required',
             'kabupaten' => 'required',
@@ -352,5 +478,4 @@ class DashboardController extends Controller
 
         return Redirect::route('dashboard')->with('success', 'Jawaban berhasil disimpan.');
     }
-
 }

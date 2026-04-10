@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RecruitmentTestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -54,16 +55,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/answer_question/{id}', [DashboardController::class, 'answerQuestion'])->name('answer_question');
     Route::post('/store_answer/{id}', [DashboardController::class, 'storeAnswer'])->name('store_answer');
 
-    Route::get('/test/{id}', [DashboardController::class, 'test'])->name('test');
+    // recruitment test
+    Route::get('/test/{id}', [RecruitmentTestController::class, 'index'])->name('test');
+    Route::get('/start_test/{id}', [RecruitmentTestController::class, 'startTest'])->name('start_test');
+    Route::get('/test/show/{id}', [RecruitmentTestController::class, 'showTest'])->name('test.show');
+    Route::post('/test/submit/{id}', [RecruitmentTestController::class, 'submitTest'])->name('test.submit');
+
+    Route::get('/test/finished', [RecruitmentTestController::class, 'finished'])->name('test.finished');
+
+
+
+
+
+
+
+
     Route::post('/store_test/{id}', [DashboardController::class, 'storeTest'])->name('storeTest');
 
     Route::post('/lamaran/store', [DashboardController::class, 'storeLamaran'])->name('lamaran.store');
     Route::get('/riwayat_pekerjaan/create/{id}', [DashboardController::class, 'createRiwayatPekerjaan'])->name('riwayat_pekerjaan.create');
     Route::post('/riwayat_pekerjaan/store', [DashboardController::class, 'storeRiwayatPekerjaan'])->name('riwayat_pekerjaan.store');
-
 });
 
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect'])->name('google.redirect');
 Route::get('/auth/google/callback', [SocialiteController::class, 'callback'])->name('google.callback');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

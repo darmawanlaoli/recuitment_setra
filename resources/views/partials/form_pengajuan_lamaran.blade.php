@@ -95,7 +95,6 @@
                     @enderror
                 </div>
 
-
                 {{-- status perkawinan --}}
                 <div class="md:col-span-2 mb-3">
                     <label for="status_perkawinan" class="label">
@@ -130,6 +129,7 @@
                     @enderror
                 </div>
 
+
                 {{-- status usia --}}
                 <div class="md:col-span-2 mb-3">
                     <label for="status_usia" class="label">
@@ -137,6 +137,9 @@
                     </label>
 
                     <input type="text" name="status_usia" id="status_usia" class="input w-full bg-gray-100" readonly>
+
+                    <small id="usia" class="text-sm text-text-secondary">Usia akan dihitung otomatis berdasarkan tanggal
+                        lahir Anda</small>
                 </div>
 
                 <div id="sim_section" style="display: none">
@@ -358,6 +361,7 @@
     const tanggalLahirInput = document.getElementById("tanggal_lahir");
     const statusPerkawinanInput = document.getElementById("status_perkawinan");
     const statusUsiaInput = document.getElementById("status_usia");
+    const posisi = document.getElementById("posisi");
 
     function hitungUsia(tanggalLahir) {
         const today = new Date();
@@ -377,7 +381,9 @@
         const tanggalLahir = tanggalLahirInput.value;
         const statusPerkawinan = statusPerkawinanInput.value;
 
-        if (!tanggalLahir || !statusPerkawinan) {
+        const posisiSelected = posisi.options[posisi.selectedIndex]?.text || "";
+
+        if (!tanggalLahir || !statusPerkawinan || !posisiSelected) {
             statusUsiaInput.value = "";
             return;
         }
@@ -386,11 +392,15 @@
 
         let lulus = false;
 
-        if (statusPerkawinan === "Menikah") {
-            lulus = usia >= 20 && usia <= 51;
-        }
-        else if (statusPerkawinan === "Lajang") {
-            lulus = usia >= 25 && usia <= 51;
+        if(posisiSelected.includes("DRIVER")) {
+            if (statusPerkawinan === "Menikah") {
+                lulus = usia >= 20 && usia <= 51;
+            }
+            else if (statusPerkawinan === "Lajang") {
+                lulus = usia >= 25 && usia <= 51;
+            }
+        }else {
+            lulus = usia >= 18 && usia <= 51;
         }
 
         if (lulus) {
@@ -402,11 +412,18 @@
             statusUsiaInput.classList.remove("text-primary");
             statusUsiaInput.classList.add("text-danger");
         }
+
+        document.getElementById('usia').innerHTML = `Usia Anda: ${usia} tahun<br>
+        <ul>
+            <li>Posisi non driver: LULUS jika usia antara 18-51 tahun</li>
+            <li>Posisi driver menikah: LULUS jika usia antara 20-51 tahun</li>
+            <li>Posisi driver lajang: LULUS jika usia antara 25-51 tahun</li>
+        </ul>`;
     }
 
     tanggalLahirInput.addEventListener("change", updateStatusUsia);
     statusPerkawinanInput.addEventListener("change", updateStatusUsia);
-
+    posisi.addEventListener("change", updateStatusUsia);
     // Jika edit data lama
     updateStatusUsia();
 });
@@ -583,5 +600,45 @@
 
     // Untuk edit data (auto hitung saat load)
     hitungUsiaSim();
+});
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+    const statusUsia = document.getElementById("status_usia");
+    const statusSim  = document.getElementById("status_berlaku_sim");
+    const posisi     = document.getElementById("posisi");
+
+    form.addEventListener("submit", function (e) {
+
+        let isValid = true;
+        let messages = [];
+
+        // Validasi usia
+        if (statusUsia.value === "TIDAK LULUS") {
+            isValid = false;
+            messages.push("Usia tidak memenuhi syarat.");
+        }
+
+        // Validasi SIM hanya jika posisi driver
+        const selectedText = posisi.options[posisi.selectedIndex]?.text || "";
+        if (selectedText.toLowerCase().includes("driver")) {
+            if (statusSim.value === "TIDAK LULUS") {
+                isValid = false;
+                messages.push("Masa berlaku SIM tidak memenuhi syarat.");
+            }
+        }
+
+        // Jika ada yang tidak valid
+        if (!isValid) {
+            e.preventDefault(); // stop submit
+
+            alert("Tidak dapat menyimpan data:\n\n" + messages.join("\n"));
+        }
+    });
+
 });
 </script>

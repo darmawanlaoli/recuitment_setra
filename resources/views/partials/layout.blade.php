@@ -15,6 +15,7 @@
             src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsetrarecr6900back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.15">
         </script>
         <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
 
     <body class="bg-background">
@@ -207,6 +208,35 @@
             fileNameEl.classList.add('hidden');
             }
         });
+    </script>
+
+
+    <script>
+        //message with sweetalert
+            @if(session('alert'))
+
+                Swal.fire({
+                    title: "{{ session('alert') }}",
+                    icon: "alert",
+                    draggable: true
+                });
+
+            @elseif(session('error'))
+                Swal.fire({
+                    icon: "error",
+                    title: "GAGAL!",
+                    text: "{{ session('error') }}",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Alert...",
+                    text: "{{ session('error') }}",
+                    });
+            @endif
+
     </script>
 
 

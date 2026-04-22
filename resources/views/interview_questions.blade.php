@@ -5,7 +5,7 @@
 
 
 <div class="lg:col-span-2">
-    <form method="POST" action="{{ route('store_answer', $applicationId) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('store_interview_answer', $applicationId) }}" enctype="multipart/form-data">
         @csrf
 
         <!-- address -->
@@ -88,5 +88,18 @@
 
     </form>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('interview_error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Validasi Gagal',
+        text: "{{ session('interview_error') }} Jawaban YA/TIDAK wajib diisi semua.",
+    });
+</script>
+@endif
 
 @endsection

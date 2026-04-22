@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Applicants;
-use App\Models\RecruitmentQuestion;
 use App\Models\RecruitmentTestAnswer;
 use App\Models\RecruitmentTestSession;
 use App\Models\RecruitmentTestQuestion;
@@ -24,7 +23,12 @@ use App\Models\Area;
 use App\Models\EmploymentHistory;
 use App\Models\RecruitmentTestType;
 use App\Services\ApplicationService;
+
+use App\Models\RecruitmentInterviewQuestion;
+use App\Models\RecruitmentInterviewAnswer;
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Validator;
 
 
 class DashboardController extends Controller
@@ -411,15 +415,15 @@ class DashboardController extends Controller
     public function answerQuestion($applicationId): View
     {
 
-        // $questions = RecruitmentQuestion::where('is_active', true)
+        // $questions = RecruitmentTestQuestion::where('is_active', true)
         // ->orderBy('sort_order')
         // ->get();
 
-        $questions = RecruitmentQuestion::where('is_active', true)
+        $questions = RecruitmentTestQuestion::where('is_active', true)
             ->orderBy('sort_order')
             ->get();
 
-        $answers = RecruitmentAnswer::where('application_id', $applicationId)
+        $answers = RecruitmentTestAnswer::where('application_id', $applicationId)
             ->get()
             ->keyBy('question_id');
 
@@ -435,7 +439,7 @@ class DashboardController extends Controller
 
     public function storeAnswer(Request $request, $applicationId)
     {
-        $questions = RecruitmentQuestion::where('is_active', true)->get();
+        $questions = RecruitmentTestQuestion::where('is_active', true)->get();
 
         $rules = [];
 
@@ -464,7 +468,88 @@ class DashboardController extends Controller
                 continue;
             }
 
-            RecruitmentAnswer::updateOrCreate(
+            RecruitmentTestAnswer::updateOrCreate(
+                [
+                    'application_id' => $applicationId,
+                    'question_id' => $question->id
+                ],
+                [
+                    'answer_value' => $answerValue,
+                    'explanation' => $explanation
+                ]
+            );
+        }
+
+        return Redirect::route('dashboard')->with('success', 'Jawaban berhasil disimpan.');
+    }
+
+
+    public function interview($applicationId)
+    {
+        $questions = RecruitmentInterviewQuestion::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        // dd($questions);
+
+        $answers = RecruitmentInterviewAnswer::where('application_id', $applicationId)
+            ->get()
+            ->keyBy('question_id');
+
+        $sidebar = false;
+
+        return view('interview_questions', compact(
+            'questions',
+            'answers',
+            'applicationId',
+            'sidebar'
+        ));
+    }
+
+
+    public function storeInterviewAnswer(Request $request, $applicationId)
+    {
+        $questions = RecruitmentInterviewQuestion::where('is_active', true)->get();
+
+        $rules = [];
+
+        foreach ($questions as $question) {
+
+            if ($question->is_required) {
+                $rules["answers.{$question->id}.value"] = 'required|in:YA,TIDAK';
+            } else {
+                $rules["answers.{$question->id}.value"] = 'nullable|in:YA,TIDAK';
+            }
+
+            if ($question->question_type === 'yes_no_with_explanation') {
+                $rules["answers.{$question->id}.explanation"] = 'nullable|string';
+            }
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('interview_error', 'Validasi gagal, periksa kembali jawaban Anda.');
+        }
+
+        $validated = $request->validate($rules);
+
+
+
+        foreach ($questions as $question) {
+
+            $answerValue = $validated['answers'][$question->id]['value'] ?? null;
+            $explanation = $validated['answers'][$question->id]['explanation'] ?? null;
+
+            // Jangan simpan jika benar-benar kosong
+            if (!$answerValue && !$explanation) {
+                continue;
+            }
+
+            RecruitmentInterviewAnswer::updateOrCreate(
                 [
                     'application_id' => $applicationId,
                     'question_id' => $question->id

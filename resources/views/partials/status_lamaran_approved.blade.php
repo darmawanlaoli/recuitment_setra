@@ -32,7 +32,7 @@
 
     <a href="{{ route('profile.edit', $applications->id) }}" class="btn btn-primary mt-3">Lihat Profile</a>
 
-    <a href="{{ route('answer_question', $applications->id) }}" class="btn btn-outline mt-3">Jawab
+    <a href="{{ route('interview.questions', $applications->id) }}" class="btn btn-outline mt-3">Jawab
         Pertanyaan</a>
 
     @endif

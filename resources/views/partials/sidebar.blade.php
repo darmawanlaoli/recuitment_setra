@@ -106,7 +106,7 @@
 
                 {{-- Pertanyaan Aktif --}}
                 @if(!$questionDone)
-                <div onclick="document.location.href='{{ route('answer_question',$applications->id) }}'"
+                <div onclick="document.location.href='{{ route('interview.questions', $applications->id) }}'"
                     class="flex items-center justify-between p-3 bg-primary rounded-lg cursor-pointer">
                     <span class="text-sm text-white">Mengisi Pertanyaan</span>
                     <span class="text-lg font-bold text-white font-heading">✓</span>

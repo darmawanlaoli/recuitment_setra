@@ -63,6 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/test/finished', [RecruitmentTestController::class, 'finished'])->name('test.finished');
 
+    Route::get('/interview/questions/{id}', [DashboardController::class, 'interview'])->name('interview.questions');
+    Route::post('/interview/answer/{id}', [DashboardController::class, 'storeInterviewAnswer'])->name('store_interview_answer');
+
 
 
 
